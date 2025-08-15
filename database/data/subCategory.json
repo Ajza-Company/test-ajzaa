@@ -1,0 +1,93 @@
+[
+    {
+        "name": "Car Parts",
+        "name_ar": "قطع غيار  السيارات",
+        "subCategory": [
+            {
+                "name": "Oil Filters",
+                "id": "9524",
+                "visible": true,
+                "name_ar": "فلاتر زيت"
+            },
+            {
+                "name": "Oils",
+                "id": "7442",
+                "visible": true,
+                "name_ar": "زيوت"
+            },
+            {
+                "name": "A\\C & Heating",
+                "id": "7405",
+                "visible": true,
+                "name_ar": "تكييف وتدفئة"
+            },
+            {
+                "name": "Brakes",
+                "id": "7407",
+                "visible": true,
+                "name_ar": "فرامل"
+            },
+            {
+                "name": "Electrical",
+                "id": "7409",
+                "visible": true,
+                "name_ar": "كهرباء"
+            },
+            {
+                "name": "Engine",
+                "id": "7424",
+                "visible": true,
+                "name_ar": "محرك"
+            },
+            {
+                "name": "External & Internal Body",
+                "id": "7433",
+                "visible": true,
+                "name_ar": "هيكل خارجي وداخلي"
+            },
+            {
+                "name": "Factory Wheel",
+                "id": "7437",
+                "visible": true,
+                "name_ar": "جنوط"
+            },
+            {
+                "name": "Injection",
+                "id": "7439",
+                "visible": true,
+                "name_ar": "حقن"
+            },
+            {
+                "name": "Suspension & Handling",
+                "id": "7443",
+                "visible": true,
+                "name_ar": "تعليق وتوجيه"
+            },
+            {
+                "name": "Transmission & Differential Parts",
+                "id": "7447",
+                "visible": true,
+                "name_ar": "ناقل الحركة والدفرنس"
+            },
+            {
+                "name": "Engine Cooling",
+                "id": "7431",
+                "visible": true,
+                "name_ar": "تبريد المحرك"
+            }
+        ]
+    },
+    {
+        "name": "Oils and filters",
+        "name_ar":  "الزيوت والفلاتر"
+    },
+    {
+        "name": "Car Covers",
+        "name_ar":  "كفرات السيارات"
+    },
+    {
+        "name": "Decorations and accessories",
+        "name_ar":  "الزينة والاكسسوارات"
+    }
+
+]

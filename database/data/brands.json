@@ -1,0 +1,176 @@
+[
+    {
+        "name": "Geely",
+        "id": 19403,
+        "include_in_menu": 0,
+        "name_ar": "جيلي"
+    },
+    {
+        "name": "Haval",
+        "id": 19157,
+        "include_in_menu": 1,
+        "name_ar": "هافال"
+    },
+    {
+        "name": "Mitsubishi",
+        "id": 19078,
+        "include_in_menu": 1,
+        "name_ar": "ميتسوبيشي"
+    },
+    {
+        "name": "MG",
+        "id": 14728,
+        "include_in_menu": 1,
+        "name_ar": "إم جي"
+    },
+    {
+        "name": "Changan",
+        "id": 18427,
+        "include_in_menu": 1,
+        "name_ar": "شانجان"
+    },
+    {
+        "name": "Volkswagen",
+        "id": 7384,
+        "include_in_menu": 0,
+        "name_ar": "فولكس فاجن"
+    },
+    {
+        "name": "Lexus",
+        "id": 11924,
+        "include_in_menu": 1,
+        "name_ar": "لكزس"
+    },
+    {
+        "name": "Toyota",
+        "id": 10827,
+        "include_in_menu": 1,
+        "name_ar": "تويوتا"
+    },
+    {
+        "name": "Hyundai",
+        "id": 9573,
+        "include_in_menu": 1,
+        "name_ar": "هيونداي"
+    },
+    {
+        "name": "Chrysler",
+        "id": 7646,
+        "include_in_menu": 0,
+        "name_ar": "كرايسلر"
+    },
+    {
+        "name": "Suzuki",
+        "id": 6968,
+        "include_in_menu": 0,
+        "name_ar": "سوزوكي"
+    },
+    {
+        "name": "Nissan",
+        "id": 6721,
+        "include_in_menu": 0,
+        "name_ar": "نيسان"
+    },
+    {
+        "name": "Mercury",
+        "id": 6547,
+        "include_in_menu": 1,
+        "name_ar": "ميركوري"
+    },
+    {
+        "name": "Mercedes-Benz",
+        "id": 6221,
+        "include_in_menu": 0,
+        "name_ar": "مرسيدس-بنز"
+    },
+    {
+        "name": "Mazda",
+        "id": 5964,
+        "include_in_menu": 0,
+        "name_ar": "مازدا"
+    },
+    {
+        "name": "Lincoln",
+        "id": 5678,
+        "include_in_menu": 0,
+        "name_ar": "لينكولن"
+    },
+    {
+        "name": "Land Rover",
+        "id": 5310,
+        "include_in_menu": 0,
+        "name_ar": "لاند روفر"
+    },
+    {
+        "name": "Kia",
+        "id": 5241,
+        "include_in_menu": 0,
+        "name_ar": "كيا"
+    },
+    {
+        "name": "Jeep",
+        "id": 4973,
+        "include_in_menu": 0,
+        "name_ar": "جيب"
+    },
+    {
+        "name": "Infiniti",
+        "id": 4868,
+        "include_in_menu": 0,
+        "name_ar": "إنفينيتي"
+    },
+    {
+        "name": "Hummer",
+        "id": 4645,
+        "include_in_menu": 1,
+        "name_ar": "همر"
+    },
+    {
+        "name": "Honda",
+        "id": 4549,
+        "include_in_menu": 0,
+        "name_ar": "هوندا"
+    },
+    {
+        "name": "GMC",
+        "id": 3789,
+        "include_in_menu": 1,
+        "name_ar": "جي إم سي"
+    },
+    {
+        "name": "Ford",
+        "id": 2331,
+        "include_in_menu": 1,
+        "name_ar": "فورد"
+    },
+    {
+        "name": "Dodge",
+        "id": 1938,
+        "include_in_menu": 0,
+        "name_ar": "دودج"
+    },
+    {
+        "name": "Chevrolet",
+        "id": 513,
+        "include_in_menu": 1,
+        "name_ar": "شيفروليه"
+    },
+    {
+        "name": "Cadillac",
+        "id": 192,
+        "include_in_menu": 1,
+        "name_ar": "كاديلاك"
+    },
+    {
+        "name": "BMW",
+        "id": 79,
+        "include_in_menu": 0,
+        "name_ar": "بي إم دبليو"
+    },
+    {
+        "name": "Audi",
+        "id": 5,
+        "include_in_menu": 0,
+        "name_ar": "أودي"
+    }
+]

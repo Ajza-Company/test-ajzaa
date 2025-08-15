@@ -1,0 +1,7 @@
+[
+    {"name":  "Admin", "guard_name": "api"},
+    {"name":  "Client", "guard_name": "api"},
+    {"name":  "Workshop", "guard_name": "api"},
+    {"name":  "Supplier", "guard_name": "api"},
+    {"name":  "Representative", "guard_name": "api"}
+]

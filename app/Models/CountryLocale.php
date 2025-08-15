@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Models;
+
+use App\Traits\HasLocale;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class CountryLocale extends Model
+{
+    use HasFactory, HasLocale;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'locale_id',
+        'name',
+        'country_id'
+    ];
+}

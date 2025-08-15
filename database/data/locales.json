@@ -1,0 +1,4 @@
+[
+    {"name":  "English", "locale": "en", "is_default": true},
+    {"name":  "العربية", "locale": "ar", "is_default": false}
+]

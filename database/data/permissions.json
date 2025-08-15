@@ -1,0 +1,212 @@
+[
+    {
+        "name": "show-all-permissions",
+        "group_name": "Permissions",
+        "guard_name": "api",
+        "role_name": "Supplier",
+        "friendly_name": "عرض جميع الصلاحيات"
+    },
+    {
+        "name": "view-orders",
+        "group_name": "Orders",
+        "guard_name": "api",
+        "role_name": "Supplier",
+        "friendly_name": "عرض الطلبات"
+    },
+    {
+        "name": "accept-orders",
+        "group_name": "Orders",
+        "guard_name": "api",
+        "role_name": "Supplier",
+        "friendly_name": "قبول الطلبات"
+    },
+    {
+        "name": "view-offers",
+        "group_name": "Offers",
+        "guard_name": "api",
+        "role_name": "Supplier",
+        "friendly_name": "عرض العروض"
+    },
+    {
+        "name": "control-offer",
+        "group_name": "Offers",
+        "guard_name": "api",
+        "role_name": "Supplier",
+        "friendly_name": "التحكم في العرض"
+    },
+    {
+        "name": "view-users",
+        "group_name": "Users",
+        "guard_name": "api",
+        "role_name": "Supplier",
+        "friendly_name": "عرض المستخدمين"
+    },
+    {
+        "name": "edit-users",
+        "group_name": "Users",
+        "guard_name": "api",
+        "role_name": "Supplier",
+        "friendly_name": "تعديل المستخدمين"
+    },
+    {
+        "name": "view-stores",
+        "group_name": "Stores",
+        "guard_name": "api",
+        "role_name": "Supplier",
+        "friendly_name": "عرض المتاجر"
+    },
+    {
+        "name": "edit-stores",
+        "group_name": "Stores",
+        "guard_name": "api",
+        "role_name": "Supplier",
+        "friendly_name": "تعديل المتاجر"
+    },
+    {
+        "name": "view-categories",
+        "group_name": "Categories",
+        "guard_name": "api",
+        "role_name": "Supplier",
+        "friendly_name": "عرض الفئات"
+    },
+    {
+        "name": "edit-categories",
+        "group_name": "Categories",
+        "guard_name": "api",
+        "role_name": "Supplier",
+        "friendly_name": "تعديل الفئات"
+    },
+    {
+        "name": "view-products",
+        "group_name": "Products",
+        "guard_name": "api",
+        "role_name": "Supplier",
+        "friendly_name": "عرض المنتجات"
+    },
+    {
+        "name": "edit-products",
+        "group_name": "Products",
+        "guard_name": "api",
+        "role_name": "Supplier",
+        "friendly_name": "تعديل المنتجات"
+    },
+    {
+        "name": "view-orders-statistics",
+        "group_name": "Orders",
+        "guard_name": "api",
+        "role_name": "Supplier",
+        "friendly_name": "عرض إحصائيات الطلبات"
+    },
+    {
+        "name": "a.show-all-users",
+        "group_name": "Users",
+        "guard_name": "api",
+        "role_name": "Admin",
+        "friendly_name": "عرض جميع المستخدمين"
+    },
+    {
+        "name": "a.control-user",
+        "group_name": "Users",
+        "guard_name": "api",
+        "role_name": "Admin",
+        "friendly_name": "التحكم في المستخدم"
+    },
+    {
+        "name": "a.show-all-stores",
+        "group_name": "Stores",
+        "guard_name": "api",
+        "role_name": "Admin",
+        "friendly_name": "عرض جميع المتاجر"
+    },
+    {
+        "name": "a.control-store",
+        "group_name": "Stores",
+        "guard_name": "api",
+        "role_name": "Admin",
+        "friendly_name": "التحكم في المتجر"
+    },
+    {
+        "name": "a.show-all-repSales",
+        "group_name": "RepSales",
+        "guard_name": "api",
+        "role_name": "Admin",
+        "friendly_name": "عرض جميع مندوبي المبيعات"
+    },
+    {
+        "name": "a.control-repSales",
+        "group_name": "RepSales",
+        "guard_name": "api",
+        "role_name": "Admin",
+        "friendly_name": "التحكم في مندوبي المبيعات"
+    },
+    {
+        "name": "a.show-all-promos",
+        "group_name": "Promos",
+        "guard_name": "api",
+        "role_name": "Admin",
+        "friendly_name": "عرض جميع العروض الترويجية"
+    },
+    {
+        "name": "a.control-promo",
+        "group_name": "Promos",
+        "guard_name": "api",
+        "role_name": "Admin",
+        "friendly_name": "التحكم في العروض الترويجية"
+    },
+    {
+        "name": "a.show-all-products",
+        "group_name": "Products",
+        "guard_name": "api",
+        "role_name": "Admin",
+        "friendly_name": "عرض جميع المنتجات"
+    },
+    {
+        "name": "a.control-product",
+        "group_name": "Products",
+        "guard_name": "api",
+        "role_name": "Admin",
+        "friendly_name": "التحكم في المنتج"
+    },
+    {
+        "name": "a.show-all-states",
+        "group_name": "States",
+        "guard_name": "api",
+        "role_name": "Admin",
+        "friendly_name": "عرض جميع المحافظات"
+    },
+    {
+        "name": "a.control-state",
+        "group_name": "States",
+        "guard_name": "api",
+        "role_name": "Admin",
+        "friendly_name": "التحكم في المحافظة"
+    },
+    {
+        "name": "a.show-all-offers",
+        "group_name": "Offers",
+        "guard_name": "api",
+        "role_name": "Admin",
+        "friendly_name": "عرض جميع العروض"
+    },
+    {
+        "name": "a.control-offers",
+        "group_name": "Offers",
+        "guard_name": "api",
+        "role_name": "Admin",
+        "friendly_name": "التحكم في العروض"
+    },
+    {
+        "name": "a.show-all-chat",
+        "group_name": "Chat",
+        "guard_name": "api",
+        "role_name": "Admin",
+        "friendly_name": "عرض جميع المحادثات"
+    },
+    {
+        "name": "a.control-chat",
+        "group_name": "Chat",
+        "guard_name": "api",
+        "role_name": "Admin",
+        "friendly_name": "التحكم في المحادثات"
+    }
+]
