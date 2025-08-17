@@ -15,7 +15,8 @@ use App\Http\Controllers\api\v1\Admin\{A_CompanyController,
     F_StateController,
     A_SettingController,
     A_CategoryController,
-    A_SubCategoryController};
+    A_SubCategoryController,
+    A_CarBrandController};
 use App\Http\Controllers\api\v1\General\G_TermsController;
 use App\Http\Controllers\api\v1\Supplier\S_AuthController;
 use App\Http\Controllers\api\v1\Supplier\S_CompanyController;
@@ -113,6 +114,19 @@ Route::middleware(['auth:sanctum', SetLocale::class])->group(function () {
     Route::post('category/update/{id}', [A_CategoryController::class, 'update']);
     Route::post('category/destroy/{id}', [A_CategoryController::class, 'destroy']);
     Route::get('category/show/{id}', [A_CategoryController::class, 'show']);
+    
+    // Category ordering routes
+    Route::put('categories/update-order', [A_CategoryController::class, 'updateOrder']);
+    Route::get('categories/{parent_id}/subcategories', [A_CategoryController::class, 'getSubCategories']);
+
+    // Car Brands Routes
+    Route::get('car-brands', [A_CarBrandController::class, 'index']);
+    Route::post('car-brand/create', [A_CarBrandController::class, 'store']);
+    Route::post('car-brand/update/{id}', [A_CarBrandController::class, 'update']);
+    Route::put('car-brand/update/{id}', [A_CarBrandController::class, 'update']); // Added PUT method
+    Route::delete('car-brand/delete/{id}', [A_CarBrandController::class, 'destroy']);
+    Route::get('car-brand/show/{id}', [A_CarBrandController::class, 'show']);
+    Route::post('car-brand/toggle-active/{id}', [A_CarBrandController::class, 'toggleActive']);
 
     Route::get('sub-categories/{category_id}', [A_SubCategoryController::class, 'index']);
     Route::post('sub-category/create', [A_SubCategoryController::class, 'store']);

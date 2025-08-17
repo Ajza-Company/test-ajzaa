@@ -7,33 +7,21 @@
     "require": {
         "php": "^8.2",
         "bensampo/laravel-enum": "^6.11",
+        "intervention/image": "^3.11",
         "laravel/framework": "^11.9",
         "laravel/pulse": "^1.2",
         "laravel/reverb": "^1.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "maatwebsite/excel": "^3.1",
-        "propaganistas/laravel-phone": "^5.3",
-        "pulkitjalan/google-apiclient": "^6.3",
         "pusher/pusher-php-server": "^7.2",
-        "spatie/laravel-activitylog": "^4.9",
-        "spatie/laravel-backup": "^9.0",
-        "spatie/laravel-failed-job-monitor": "^4.3",
-        "spatie/laravel-medialibrary": "^11.12",
-        "spatie/laravel-permission": "^6.9",
-        "spatie/laravel-schedule-monitor": "^3.8",
-        "stevebauman/location": "^7.5",
+        "spatie/laravel-permission": "^6.21",
+        "stevebauman/location": "^7.6",
         "vinkla/hashids": "^12.0"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.23",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.26",
-        "laravel/telescope": "^5.2",
-        "mockery/mockery": "^1.6",
-        "nunomaduro/collision": "^8.0",
-        "pelmered/fake-car": "^2.0",
-        "phpunit/phpunit": "^11.0.1"
+        "laravel/telescope": "^5.2"
     },
     "autoload": {
         "psr-4": {

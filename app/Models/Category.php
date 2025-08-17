@@ -17,6 +17,18 @@ class Category extends Model
     use HasFactory, HasLocalized;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'parent_id',
+        'image',
+        'is_active',
+        'sort_order'
+    ];
+
+    /**
      *
      * @return HasOne
      */
@@ -57,6 +69,17 @@ class Category extends Model
     public function children(): HasMany
     {
         return $this->hasMany(Category::class, 'parent_id');
+    }
+
+    /**
+     * Scope for ordering categories by sort_order
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeOrdered(Builder $query): Builder
+    {
+        return $query->orderBy('sort_order', 'asc')->orderBy('created_at', 'asc');
     }
 
     /**

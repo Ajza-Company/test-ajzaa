@@ -31,6 +31,10 @@ use App\Repositories\Admin\State\Fetch\A_FetchStateInterface;
 use App\Repositories\Admin\State\Fetch\A_FetchStateRepository;
 use App\Repositories\Admin\State\Find\S_FindStateInterface;
 use App\Repositories\Admin\State\Find\S_FindStateRepository;
+use App\Repositories\Admin\CarBrand\Fetch\A_FetchCarBrandInterface;
+use App\Repositories\Admin\CarBrand\Fetch\A_FetchCarBrandRepository;
+use App\Repositories\Admin\CarBrand\Find\A_FindCarBrandInterface;
+use App\Repositories\Admin\CarBrand\Find\A_FindCarBrandRepository;
 
 class A_RepositoryServiceProvider extends ServiceProvider
 {
@@ -108,6 +112,17 @@ class A_RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             A_FindStoreInterface::class,
             A_FindStoreRepository::class
+        );
+
+        // Car Brand Repository Bindings
+        $this->app->bind(
+            A_FetchCarBrandInterface::class,
+            A_FetchCarBrandRepository::class
+        );
+
+        $this->app->bind(
+            A_FindCarBrandInterface::class,
+            A_FindCarBrandRepository::class
         );
     }
 

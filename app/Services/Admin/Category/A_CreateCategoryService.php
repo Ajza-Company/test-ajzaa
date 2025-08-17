@@ -46,8 +46,13 @@ class A_CreateCategoryService
                     Response::HTTP_BAD_REQUEST);
             }*/
 
+            // تحديد الترتيب التلقائي
+            $maxOrder = Category::where('parent_id', isset($data['parent_id']) ? $data['parent_id'] : null)
+                ->max('sort_order') ?? 0;
+
             $category = Category::create([
                 'parent_id' => isset($data['parent_id']) ? $data['parent_id'] : null,
+                'sort_order' => $maxOrder + 1,
             ]);
 
             foreach ($data['localized'] as $local) {
