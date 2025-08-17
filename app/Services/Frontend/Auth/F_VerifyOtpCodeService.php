@@ -34,7 +34,7 @@ class F_VerifyOtpCodeService
         \DB::beginTransaction();
         try {
             if (!isValidPhone($data['full_mobile'])) {
-                return response()->json(errorResponse(message: 'Invalid number detected! Let’s try a different one.'),Response::HTTP_BAD_REQUEST);
+                return response()->json(errorResponse(message: trans('validation.invalid_phone')),Response::HTTP_BAD_REQUEST);
             }
 
             $isValid = $data['code'] == '1111';

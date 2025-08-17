@@ -38,7 +38,7 @@ class F_SendOtpCodeService
             if (!isValidPhone($data['full_mobile'])) {
                 return response()->json(
                     errorResponse(
-                        message: trans('validation.invalid_number')),
+                        message: trans('validation.invalid_phone')),
                     status: Response::HTTP_BAD_REQUEST);
             }
 

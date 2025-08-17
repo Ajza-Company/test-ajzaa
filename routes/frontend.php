@@ -39,14 +39,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([], function () {
     Route::get('locales', F_LocaleController::class);
-    Route::prefix('auth')->group(function () {
-        Route::post('send-otp', [F_AuthController::class, 'sendOtp']);
-        Route::post('verify-otp', [F_AuthController::class, 'verifyOtp']);
-        Route::post('create-account', [F_AuthController::class, 'createAccount']);
-        Route::post('setup-account', [F_AuthController::class, 'setupAccount']);
-    });
 
     Route::middleware(SetLocale::class)->group(function () {
+        Route::prefix('auth')->group(function () {
+            Route::post('send-otp', [F_AuthController::class, 'sendOtp']);
+            Route::post('verify-otp', [F_AuthController::class, 'verifyOtp']);
+            Route::post('create-account', [F_AuthController::class, 'createAccount']);
+            Route::post('setup-account', [F_AuthController::class, 'setupAccount']);
+        });
         Route::get('ajza-offers', [F_ProductController::class, '__invoke']);
 
         Route::prefix('car-brands')->group(function () {
