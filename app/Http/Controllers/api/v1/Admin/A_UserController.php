@@ -51,8 +51,31 @@ class A_UserController extends Controller
      */
     public function index()
     {
-        $type = request()->type ?? 'Supplier';
-        return A_ShortUserResource::collection($this->fetchUser->fetch(isLocalized:false, withCount: ['orders'], role: $type));
+        $type = request()->type ?? null;
+        
+        if ($type) {
+            // If specific role is requested, filter by role
+            return A_ShortUserResource::collection($this->fetchUser->fetch(
+                null, // data
+                true, // paginate
+                null, // with
+                ['orders'], // withCount
+                false, // isLocalized
+                true, // latest
+                $type // role
+            ));
+        } else {
+            // If no role specified, return all users
+            return A_ShortUserResource::collection($this->fetchUser->fetch(
+                null, // data
+                true, // paginate
+                null, // with
+                ['orders'], // withCount
+                false, // isLocalized
+                true, // latest
+                null // role
+            ));
+        }
     }
 
     /**

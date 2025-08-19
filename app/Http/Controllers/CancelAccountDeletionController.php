@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\DeleteAccountRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
-class DeleteAccountController extends Controller
+class CancelAccountDeletionController extends Controller
 {
-    public function __invoke(DeleteAccountRequest $request)
+    public function __invoke(Request $request)
     {
         try {
             $user = Auth::user();
@@ -28,35 +28,30 @@ class DeleteAccountController extends Controller
             if (!$hasClientRole && !$hasNoRole) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Account deletion is only available for clients'
+                    'message' => 'Account deletion cancellation is only available for clients'
                 ], 403);
             }
 
-            if ($user->isPendingDeletion()) {
+            if (!$user->isPendingDeletion()) {
                 return response()->json([
                     'success' => false,
-                    'message' => trans('general.deletion_already_requested')
+                    'message' => trans('general.no_deletion_request_found')
                 ], 400);
             }
 
             DB::beginTransaction();
             
             $user->update([
-                'deletion_status' => 'pending_deletion',
-                'deletion_requested_at' => now(),
-                'deletion_reason' => $request->reason
+                'deletion_status' => 'active',
+                'deletion_requested_at' => null,
+                'deletion_reason' => null
             ]);
 
             DB::commit();
-            $user->refresh();
 
             return response()->json([
                 'success' => true,
-                'message' => trans('general.deletion_requested_successfully'),
-                'data' => [
-                    'deletion_date' => $user->deletion_date,
-                    'remaining_days' => $user->remaining_days
-                ]
+                'message' => trans('general.deletion_cancelled_successfully')
             ]);
 
         } catch (Throwable $e) {

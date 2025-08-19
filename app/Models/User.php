@@ -41,6 +41,9 @@ class User extends Authenticatable
         'is_registered',
         'gender',
         'state_id',
+        'deletion_status',
+        'deletion_requested_at',
+        'deletion_reason'
     ];
 
     /**
@@ -62,7 +65,8 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed'
+            'password' => 'hashed',
+            'deletion_requested_at' => 'datetime'
         ];
     }
 
@@ -222,5 +226,82 @@ class User extends Authenticatable
     public function scopeGetUserFilter (Builder $builder, $request): Builder
     {
         return (new GetUserFilter($request))->filter($builder);
+    }
+
+    /**
+     * Check if user account is pending deletion
+     */
+    public function isPendingDeletion(): bool
+    {
+        return $this->deletion_status === 'pending_deletion';
+    }
+
+    /**
+     * Check if user account is deleted
+     */
+    public function isDeleted(): bool
+    {
+        return $this->deletion_status === 'deleted';
+    }
+
+    /**
+     * Check if user can perform actions
+     */
+    public function canPerformActions(): bool
+    {
+        return $this->deletion_status === 'active' && $this->is_active;
+    }
+
+    /**
+     * Check if user can make orders
+     */
+    public function canMakeOrders(): bool
+    {
+        return $this->canPerformActions();
+    }
+
+    /**
+     * Check if user can access dashboard
+     */
+    public function canAccessDashboard(): bool
+    {
+        return $this->canPerformActions();
+    }
+
+    /**
+     * Check if user is completely blocked
+     */
+    public function isBlocked(): bool
+    {
+        return $this->deletion_status === 'deleted' || !$this->is_active;
+    }
+
+    /**
+     * Get deletion date (15 days from request)
+     */
+    public function getDeletionDateAttribute(): ?string
+    {
+        if ($this->deletion_requested_at) {
+            return $this->deletion_requested_at->addDays(15)->format('Y-m-d H:i:s');
+        }
+        return null;
+    }
+
+    /**
+     * Get remaining days until deletion
+     */
+    public function getRemainingDaysAttribute(): ?int
+    {
+        if ($this->deletion_requested_at) {
+            $deletionDate = $this->deletion_requested_at->addDays(15);
+            $now = now();
+            
+            if ($deletionDate->isPast()) {
+                return 0;
+            }
+            
+            return $now->diffInDays($deletionDate, false);
+        }
+        return null;
     }
 }

@@ -16,7 +16,8 @@ use App\Http\Controllers\api\v1\Admin\{A_CompanyController,
     A_SettingController,
     A_CategoryController,
     A_SubCategoryController,
-    A_CarBrandController};
+    A_CarBrandController,
+    A_AccountDeletionController};
 use App\Http\Controllers\api\v1\General\G_TermsController;
 use App\Http\Controllers\api\v1\Supplier\S_AuthController;
 use App\Http\Controllers\api\v1\Supplier\S_CompanyController;
@@ -138,4 +139,12 @@ Route::middleware(['auth:sanctum', SetLocale::class])->group(function () {
     Route::get('orders', [A_StatisticsController::class, 'orders']);
 
     Route::post('send-notification', A_NotificationController::class);
+
+    // Account deletion management
+    Route::prefix('account-deletions')->group(function () {
+        Route::get('/', [A_AccountDeletionController::class, 'index']);
+        Route::get('deleted', [A_AccountDeletionController::class, 'deletedUsers']);
+        Route::post('{userId}/reactivate', [A_AccountDeletionController::class, 'reactivate']);
+        Route::get('statistics', [A_AccountDeletionController::class, 'statistics']);
+    });
 });

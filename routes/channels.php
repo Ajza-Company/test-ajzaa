@@ -5,6 +5,7 @@ use App\Models\RepChat;
 use App\Models\RepOrder;
 use App\Models\SupportChat;
 use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\Facades\Log;
 
 Broadcast::routes(['middleware' => 'auth:sanctum']);
 
@@ -90,4 +91,28 @@ Broadcast::channel('support.chat.{chatId}', function ($user, $chatId) {
         ]);
         return false;
     }
+});
+
+// Private chat channels for general chat
+Broadcast::channel('private-chat.{chatId}', function ($user, $chatId) {
+    // التحقق من أن المستخدم يمكنه الوصول لهذا الـ chat
+    // يمكنك إضافة logic أكثر تعقيداً هنا
+    return true;
+});
+
+// Private user channels for notifications
+Broadcast::channel('private-user.{userId}', function ($user, $userId) {
+    return (int) $user->id === (int) $userId;
+});
+
+// Private order channels for order updates
+Broadcast::channel('private-order.{orderId}', function ($user, $orderId) {
+    // التحقق من أن المستخدم يمكنه الوصول لهذا الـ order
+    // يمكنك إضافة logic أكثر تعقيداً هنا
+    return true;
+});
+
+// Test channel for debugging
+Broadcast::channel('test-channel', function ($user) {
+    return true;
 });

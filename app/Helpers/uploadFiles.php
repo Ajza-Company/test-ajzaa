@@ -3,6 +3,7 @@
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Upload files to a specified directory.
@@ -13,42 +14,28 @@ use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('uploadFiles')) {
     /**
-     * Upload multiple files to a specified directory.
+     * Upload files to storage
      *
-     * @param string $directory The directory where the files will be uploaded to.
-     * @param array|UploadedFile $files An array of files to be uploaded.
-     * @param string|null $disk The disk on which the files should be stored.
-     *
-     * @return array An array of file paths.
-     *
-     * @example
-     * $filePath = uploadFiles("/", $request->someFile);
-     * $files = uploadFiles("/", $request->files());
+     * @param mixed $file
+     * @param string $path
+     * @param string $disk
+     * @return string|null
      */
-    function uploadFiles(string $directory, array|UploadedFile $files, string $disk = null): array
+    function uploadFiles($file, string $path = 'uploads', string $disk = 'public'): ?string
     {
-        // Remove extra slashes in directory path
-        $directory = trim($directory, '/');
-
-        // Create the destination directory if not exists
-        $isDirectoryExists = File::exists($directory . '/');
-        if (!$isDirectoryExists) {
-            // Create the directory with 0777 permissions and recursive
-            File::makeDirectory($directory, 0777, true, true);
+        if (!$file) {
+            return null;
         }
 
-        // Support passing single file to the function
-        if ($files instanceof UploadedFile) {
-            $files = [$files];
+        try {
+            $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $filePath = $file->storeAs($path, $fileName, $disk);
+            
+            return $filePath;
+        } catch (\Exception $e) {
+            Log::error('File upload failed: ' . $e->getMessage());
+            return null;
         }
-
-        $filesArray = [];
-        foreach ($files as $file) {
-            // Store each file and add the file path to the array
-            $filesArray[] = storeFile($directory, $file, $disk);
-        }
-
-        return $filesArray;
     }
 
     /**

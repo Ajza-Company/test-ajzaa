@@ -24,6 +24,11 @@ class UserResource extends JsonResource
             'fullMobile' => $this->full_mobile,
             'gender' => $this->gender,
             'isRegistered' => (bool)$this->is_registered,
+            'deletionStatus' => $this->deletion_status,
+            'deletionRequestedAt' => $this->deletion_requested_at,
+            'deletionReason' => $this->deletion_reason,
+            'canMakeOrders' => $this->canMakeOrders(),
+            'canAccessDashboard' => $this->canAccessDashboard(),
             'category' => $this->whenLoaded('company', function () {return F_CategoryResource::make($this->company->category);}),
             'role' => $this->whenLoaded('roles', function () {
                 return $this->roles->first()?->name;
