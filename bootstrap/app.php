@@ -43,6 +43,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+            'check.permissions' => \App\Http\Middleware\CheckUserPermissions::class,
+            'check.role' => \App\Http\Middleware\CheckUserRole::class,
+            'auto.permissions' => \App\Http\Middleware\AutoAssignPermissions::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

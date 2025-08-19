@@ -19,13 +19,8 @@ class CategoryFilter
     {
         $category = Category::find(decodeString($value));
         if ($category) {
-            $categories = [$category->id];
-            if (!$category->parent_id) {
-                foreach ($category->children as $child) {
-                    $categories[] = $child->id;
-                }
-            }
-            return $builder->whereIn('category_id', $categories);
+            // Since we no longer use parent/child structure, just filter by the category ID
+            return $builder->where('category_id', $category->id);
         }
         return $builder;
     }

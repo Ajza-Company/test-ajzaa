@@ -24,6 +24,12 @@ class F_CategoryController extends Controller
      */
     public function __invoke()
     {
-        return F_CategoryResource::collection($this->fetchCategory->fetch(paginate: false, latest: false, with: ['variants']));
+        // Get all categories with custom sorting (sort_order)
+        $categories = \App\Models\Category::whereHas('localized')
+            ->with(['localized', 'variants'])
+            ->ordered() // Custom sort by sort_order
+            ->get();
+
+        return F_CategoryResource::collection($categories);
     }
 }

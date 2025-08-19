@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
             // CarModelLocaleSeeder::class,
             // CarTypeSeeder::class,
             // CarTypeLocaleSeeder::class,
-            CategorySeeder::class,
+            FlatCategoriesSeeder::class,
             // CategoryLocaleSeeder::class,
             CountrySeeder::class,
             // StoreSeeder::class,

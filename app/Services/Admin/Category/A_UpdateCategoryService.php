@@ -23,9 +23,8 @@ class A_UpdateCategoryService
         \DB::beginTransaction();
         try {
 
-            $Category->update([
-                'parent_id'=>isset($data['parent_id'])?$data['parent_id']:null,
-            ]);
+            // parent_id is no longer used in flat structure
+            // $Category->update([]);
 
             foreach($data['localized'] as $local){
                 CategoryLocale::updateOrCreate(

@@ -1,101 +1,120 @@
 <?php
 
-namespace App\Services\Supplier\Auth;
+namespace App\Console\Commands;
 
-use App\Enums\ErrorMessageEnum;
-use App\Enums\SuccessMessagesEnum;
-use App\Http\Resources\v1\User\UserResource;
 use App\Models\User;
-use App\Repositories\General\FcmToken\Create\G_CreateFcmTokenInterface;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Lang;
+use Illuminate\Console\Command;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
-class S_LoginService
+class AutoAssignAllUserPermissions extends Command
 {
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'permissions:auto-assign-all {--force : Force reassignment even if user has permissions}';
 
     /**
-     * Create the event listener.
+     * The console command description.
+     *
+     * @var string
      */
-    public function __construct(private G_CreateFcmTokenInterface $createFcmToken)
-    {
-        //
-    }
+    protected $description = 'Auto assign permissions to all users based on their roles';
 
     /**
-     * @param array $data
-     * @return JsonResponse
+     * Execute the console command.
      */
-    public function login(array $data): JsonResponse
+    public function handle()
     {
-        try {
-            $credentials = [
-                'is_registered' => true,
-                'is_active' => true,
-                'full_mobile' => $data['full_mobile'],
-                'password' => $data['password']
-            ];
-
-            $user = $this->authenticate($credentials);
-
-            if ($user) {
-                // Auto assign permissions if user doesn't have any
-                $this->autoAssignPermissionsIfNeeded($user);
+        $force = $this->option('force');
+        
+        $this->info("🔐 AUTO ASSIGNING PERMISSIONS TO ALL USERS");
+        $this->line("=============================================");
+        
+        $users = User::with('roles')->get();
+        $totalUsers = $users->count();
+        $processedUsers = 0;
+        $skippedUsers = 0;
+        $errorUsers = 0;
+        
+        $this->newLine();
+        $this->info("Found {$totalUsers} users in the system");
+        $this->newLine();
+        
+        $progressBar = $this->output->createProgressBar($totalUsers);
+        $progressBar->start();
+        
+        foreach ($users as $user) {
+            try {
+                $result = $this->processUser($user, $force);
                 
-                if (isset($data['fcm_token'])) {
-                    $this->createFcmToken->create([
-                        'user_id' => $user->id,
-                        'token' => $data['fcm_token']
-                    ]);
+                if ($result === 'processed') {
+                    $processedUsers++;
+                } elseif ($result === 'skipped') {
+                    $skippedUsers++;
+                } else {
+                    $errorUsers++;
                 }
-
-                return response()->json(successResponse(
-                    message: trans(SuccessMessagesEnum::LOGGEDIN),
-                    data: UserResource::make($user->load('stores', 'roles','company')),
-                    token: $user->createToken('auth_token')->plainTextToken
-                ));
+                
+            } catch (\Exception $e) {
+                $this->error("Error processing user {$user->id}: " . $e->getMessage());
+                $errorUsers++;
             }
-
-            return response()->json(errorResponse(message: 'Invalid mobile number and/or password'), Response::HTTP_BAD_REQUEST);
-        } catch (\Exception $exception) {
-            return response()->json(errorResponse(message: trans(ErrorMessageEnum::LOGIN), error: $exception->getMessage()), Response::HTTP_INTERNAL_SERVER_ERROR);
+            
+            $progressBar->advance();
         }
+        
+        $progressBar->finish();
+        $this->newLine(2);
+        
+        // Summary
+        $this->info("📊 SUMMARY:");
+        $this->line("-------------");
+        $this->line("Total Users: {$totalUsers}");
+        $this->line("✅ Processed: {$processedUsers}");
+        $this->line("⏭️  Skipped: {$skippedUsers}");
+        $this->line("❌ Errors: {$errorUsers}");
+        
+        $this->newLine();
+        $this->info("🎯 Next Steps:");
+        $this->line("1. Test login for users");
+        $this->line("2. Check if permissions are working correctly");
+        $this->line("3. Remove this command when no longer needed");
+        
+        return 0;
     }
-
-    private function authenticate(array $credentials): ?User
-    {
-        return auth()->attempt($credentials) ? auth()->user() : null;
-    }
-
+    
     /**
-     * Auto assign permissions if user doesn't have any
+     * Process individual user
      */
-    private function autoAssignPermissionsIfNeeded($user): void
+    private function processUser($user, $force): string
     {
-        // Skip if user already has permissions
-        if ($user->permissions && $user->permissions->count() > 0) {
-            return;
-        }
-
         // Skip if user has no roles
         if (!$user->roles || $user->roles->isEmpty()) {
-            return;
+            return 'skipped';
         }
-
+        
+        // Skip if user already has permissions and force is false
+        if (!$force && $user->permissions && $user->permissions->count() > 0) {
+            return 'skipped';
+        }
+        
         // Get user's first role
         $userRole = $user->roles->first();
         
         // Skip if user is Client
         if ($userRole->name === 'Client') {
-            return;
+            return 'skipped';
         }
-
-        // Auto assign permissions based on role
+        
+        // Assign permissions based on role
         $this->assignRolePermissions($user, $userRole);
+        
+        return 'processed';
     }
-
+    
     /**
      * Assign permissions based on role
      */
@@ -121,14 +140,14 @@ class S_LoginService
         // Assign permissions to user
         if (!empty($permissions)) {
             foreach ($permissions as $permissionName) {
-                $permission = \Spatie\Permission\Models\Permission::where('name', $permissionName)->first();
+                $permission = Permission::where('name', $permissionName)->first();
                 if ($permission && !$user->hasPermissionTo($permissionName)) {
                     $user->givePermissionTo($permission);
                 }
             }
         }
     }
-
+    
     /**
      * Get Admin permissions
      */

@@ -25,7 +25,6 @@ class CreateCategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'parent_id'=>'sometimes|integer|exists:categories,id',
             'localized' => 'required|array|min:1',
             'localized.*.local_id' => 'required|integer|exists:locales,id',
             'localized.*.name' => 'required|string|max:100',
@@ -38,7 +37,6 @@ class CreateCategoryRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->decodeInput('localized.*.local_id');
-        $this->decodeInput('parent_id');
     }
 
 }

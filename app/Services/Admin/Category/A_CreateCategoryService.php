@@ -47,11 +47,9 @@ class A_CreateCategoryService
             }*/
 
             // تحديد الترتيب التلقائي
-            $maxOrder = Category::where('parent_id', isset($data['parent_id']) ? $data['parent_id'] : null)
-                ->max('sort_order') ?? 0;
+            $maxOrder = Category::max('sort_order') ?? 0;
 
             $category = Category::create([
-                'parent_id' => isset($data['parent_id']) ? $data['parent_id'] : null,
                 'sort_order' => $maxOrder + 1,
             ]);
 

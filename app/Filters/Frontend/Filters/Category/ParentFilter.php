@@ -15,9 +15,8 @@ class ParentFilter
      */
     public function filter(Builder $builder, $value): Builder
     {
-        if ($value === 'null') {
-            return $builder->whereNull('parent_id');
-        }
-        return $builder->where('parent_id', decodeString($value));
+        // Since we no longer use parent/child structure, this filter is deprecated
+        // Return all categories regardless of parent_id
+        return $builder;
     }
 }

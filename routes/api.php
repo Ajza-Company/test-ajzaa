@@ -32,4 +32,14 @@ Route::prefix('v1')->group(function () {
         Route::get('cities', G_StateController::class);
         Route::get('cities/{city_id}/areas', G_AreaController::class);
     });
+    
+    // User Permissions routes
+    Route::prefix('permissions')->group(function () {
+        Route::get('my-permissions', [App\Http\Controllers\UserPermissionsController::class, 'checkMyPermissions']);
+        Route::get('check-user', [App\Http\Controllers\UserPermissionsController::class, 'checkUserPermissionsByMobile']);
+        Route::post('check-permission', [App\Http\Controllers\UserPermissionsController::class, 'checkPermission']);
+        Route::post('check-role', [App\Http\Controllers\UserPermissionsController::class, 'checkRole']);
+        Route::get('all', [App\Http\Controllers\UserPermissionsController::class, 'getAllPermissions']);
+        Route::get('roles', [App\Http\Controllers\UserPermissionsController::class, 'getAllRoles']);
+    });
 });

@@ -22,7 +22,6 @@ class Category extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'parent_id',
         'image',
         'is_active',
         'sort_order'
@@ -61,15 +60,7 @@ class Category extends Model
         return $this->hasMany(CategoryLocale::class);
     }
 
-    public function parent()
-    {
-        return $this->belongsTo(Category::class, 'parent_id');
-    }
-
-    public function children(): HasMany
-    {
-        return $this->hasMany(Category::class, 'parent_id');
-    }
+    // Parent/children relationships removed - using flat structure now
 
     /**
      * Scope for ordering categories by sort_order

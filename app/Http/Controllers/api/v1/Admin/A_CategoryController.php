@@ -39,16 +39,13 @@ class A_CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $categories = Category::where('parent_id', null)
-            ->when($request->search, function ($query, $search) {
+        $categories = Category::when($request->search, function ($query, $search) {
                 return $query->whereHas('localized', function($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%");
                 });
             })
             ->ordered() // استخدام الـ scope الجديد
-            ->with(['children' => function($query) {
-                $query->ordered(); // ترتيب الأقسام الفرعية أيضاً
-            }, 'variants', 'localized'])
+            ->with(['variants', 'localized'])
             ->get();
 
         return F_CategoryResource::collection($categories);
@@ -115,14 +112,11 @@ class A_CategoryController extends Controller
 
     /**
      * Get subcategories for a parent category
+     * Note: This method is deprecated since we no longer use parent/child structure
      */
     public function getSubCategories($parentId)
     {
-        $subCategories = Category::where('parent_id', decodeString($parentId))
-            ->ordered()
-            ->with(['localized', 'variants'])
-            ->get();
-
-        return F_CategoryResource::collection($subCategories);
+        // Since we no longer use parent/child structure, return empty collection
+        return F_CategoryResource::collection(collect([]));
     }
 }

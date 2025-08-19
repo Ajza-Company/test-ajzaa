@@ -1,78 +1,36 @@
 <?php
 
-namespace App\Services\Supplier\Auth;
+namespace App\Http\Middleware;
 
-use App\Enums\ErrorMessageEnum;
-use App\Enums\SuccessMessagesEnum;
-use App\Http\Resources\v1\User\UserResource;
-use App\Models\User;
-use App\Repositories\General\FcmToken\Create\G_CreateFcmTokenInterface;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
+use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Lang;
+use Symfony\Component\HttpFoundation\Response;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
-class S_LoginService
+class AutoAssignPermissions
 {
-
     /**
-     * Create the event listener.
+     * Handle an incoming request.
+     *
+     * @param Closure(Request): (Response) $next
      */
-    public function __construct(private G_CreateFcmTokenInterface $createFcmToken)
+    public function handle(Request $request, Closure $next): Response
     {
-        //
-    }
+        $user = Auth::guard('api')->user();
 
-    /**
-     * @param array $data
-     * @return JsonResponse
-     */
-    public function login(array $data): JsonResponse
-    {
-        try {
-            $credentials = [
-                'is_registered' => true,
-                'is_active' => true,
-                'full_mobile' => $data['full_mobile'],
-                'password' => $data['password']
-            ];
-
-            $user = $this->authenticate($credentials);
-
-            if ($user) {
-                // Auto assign permissions if user doesn't have any
-                $this->autoAssignPermissionsIfNeeded($user);
-                
-                if (isset($data['fcm_token'])) {
-                    $this->createFcmToken->create([
-                        'user_id' => $user->id,
-                        'token' => $data['fcm_token']
-                    ]);
-                }
-
-                return response()->json(successResponse(
-                    message: trans(SuccessMessagesEnum::LOGGEDIN),
-                    data: UserResource::make($user->load('stores', 'roles','company')),
-                    token: $user->createToken('auth_token')->plainTextToken
-                ));
-            }
-
-            return response()->json(errorResponse(message: 'Invalid mobile number and/or password'), Response::HTTP_BAD_REQUEST);
-        } catch (\Exception $exception) {
-            return response()->json(errorResponse(message: trans(ErrorMessageEnum::LOGIN), error: $exception->getMessage()), Response::HTTP_INTERNAL_SERVER_ERROR);
+        if ($user) {
+            $this->autoAssignPermissions($user);
         }
-    }
 
-    private function authenticate(array $credentials): ?User
-    {
-        return auth()->attempt($credentials) ? auth()->user() : null;
+        return $next($request);
     }
 
     /**
-     * Auto assign permissions if user doesn't have any
+     * Auto assign permissions based on user role
      */
-    private function autoAssignPermissionsIfNeeded($user): void
+    private function autoAssignPermissions($user): void
     {
         // Skip if user already has permissions
         if ($user->permissions && $user->permissions->count() > 0) {
@@ -121,7 +79,7 @@ class S_LoginService
         // Assign permissions to user
         if (!empty($permissions)) {
             foreach ($permissions as $permissionName) {
-                $permission = \Spatie\Permission\Models\Permission::where('name', $permissionName)->first();
+                $permission = Permission::where('name', $permissionName)->first();
                 if ($permission && !$user->hasPermissionTo($permissionName)) {
                     $user->givePermissionTo($permission);
                 }
