@@ -7,6 +7,8 @@ use Illuminate\Http\Response;
 use App\Enums\ErrorMessageEnum;
 use Illuminate\Http\JsonResponse;
 use App\Enums\SuccessMessagesEnum;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class F_CreateSliderService
@@ -27,17 +29,25 @@ class F_CreateSliderService
      */
     public function create(): JsonResponse
     {
-        \DB::beginTransaction();
+        DB::beginTransaction();
         try {
+            $imagePath = null;
+            
+            if (request()->hasFile('image')) {
+                $imagePath = request()->file('image')->store('slider', 'public');
+            }
 
-            $slider = SliderImage::create([]);
+            $slider = SliderImage::create([
+                'image' => $imagePath,
+                'order' => request('order', 1),
+                'is_active' => request('is_active', true),
+                'locale_id' => request('locale_id')
+            ]);
 
-            $slider->addMediaFromRequest('image')->toMediaCollection('sliders');
-
-            \DB::commit();
+            DB::commit();
             return response()->json(successResponse(message: trans(SuccessMessagesEnum::CREATED)));
         } catch (\Exception $ex) {
-            \DB::rollBack();
+            DB::rollBack();
             return response()->json(errorResponse(
                 message: trans(ErrorMessageEnum::CREATE),
                 error: $ex->getMessage()),

@@ -4,6 +4,7 @@ namespace App\Http\Resources\v1\Frontend\SliderImage;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class F_SliderImageResource extends JsonResource
 {
@@ -16,7 +17,7 @@ class F_SliderImageResource extends JsonResource
     {
         return [
             'id' => encodeString($this->id),
-            'image' => $this->getFirstMediaUrl('sliders'),
+            'image' => $this->image ? Storage::url($this->image) : null,
         ];
     }
 }

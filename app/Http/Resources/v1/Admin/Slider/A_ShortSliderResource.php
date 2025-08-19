@@ -4,6 +4,7 @@ namespace App\Http\Resources\v1\Admin\Slider;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class A_ShortSliderResource extends JsonResource
 {
@@ -16,7 +17,7 @@ class A_ShortSliderResource extends JsonResource
     {
         return [
             'id' => encodeString($this->id),
-            'image' => $this->getFirstMediaUrl('sliders'),
+            'image' => $this->image ? Storage::url($this->image) : null,
         ];
     }
 }
