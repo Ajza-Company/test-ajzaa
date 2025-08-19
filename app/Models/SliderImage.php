@@ -38,7 +38,15 @@ class SliderImage extends Model
     public function getImageUrlAttribute(): ?string
     {
         if ($this->image) {
-            return Storage::url($this->image);
+            // Try to get URL from storage
+            $url = Storage::url($this->image);
+            
+            // If storage URL doesn't work, construct direct URL
+            if (str_contains($url, '/storage/')) {
+                return 'https://dev.ajza.net/storage/' . str_replace('/storage/', '', $this->image);
+            }
+            
+            return $url;
         }
         return null;
     }

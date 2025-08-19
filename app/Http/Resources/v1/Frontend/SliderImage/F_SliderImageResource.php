@@ -17,7 +17,26 @@ class F_SliderImageResource extends JsonResource
     {
         return [
             'id' => encodeString($this->id),
-            'image' => $this->image ? Storage::url($this->image) : null,
+            'image' => $this->getImageUrl(),
         ];
+    }
+
+    /**
+     * Get the image URL with fallback
+     */
+    private function getImageUrl(): ?string
+    {
+        if ($this->image) {
+            // Try to get URL from storage
+            $url = Storage::url($this->image);
+            
+            // If storage URL doesn't work, construct direct URL
+            if (str_contains($url, '/storage/')) {
+                return 'https://dev.ajza.net/storage/' . str_replace('/storage/', '', $this->image);
+            }
+            
+            return $url;
+        }
+        return null;
     }
 }
