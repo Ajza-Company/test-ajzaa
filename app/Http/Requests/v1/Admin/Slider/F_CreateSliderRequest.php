@@ -4,6 +4,7 @@ namespace App\Http\Requests\v1\Admin\Slider;
 
 use App\Traits\DecodesInputTrait;
 use App\Enums\EncodingMethodsEnum;
+use App\Models\SliderImage;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -30,7 +31,7 @@ class F_CreateSliderRequest extends FormRequest
             'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:10240',
             'order' => 'nullable|integer|min:1',
             'is_active' => 'nullable|boolean',
-            'locale_id' => 'required|exists:locales,id'
+            'locale_id' => 'nullable|exists:locales,id'
         ];
     }
 
@@ -46,8 +47,18 @@ class F_CreateSliderRequest extends FormRequest
             'image.max' => 'The image may not be greater than 10MB.',
             'order.integer' => 'The order must be an integer.',
             'order.min' => 'The order must be at least 1.',
-            'locale_id.required' => 'The locale is required.',
             'locale_id.exists' => 'The selected locale is invalid.'
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        // Set default locale_id if not provided
+        if (!$this->has('locale_id')) {
+            $this->merge(['locale_id' => SliderImage::getDefaultLocaleId()]);
+        }
     }
 }

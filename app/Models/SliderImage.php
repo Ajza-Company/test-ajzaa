@@ -66,4 +66,26 @@ class SliderImage extends Model
     {
         return $query->orderBy('order');
     }
+
+    /**
+     * Get the default locale ID
+     */
+    public static function getDefaultLocaleId(): int
+    {
+        return Locale::where('is_default', true)->first()->id ?? 1;
+    }
+
+    /**
+     * Boot the model
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($slider) {
+            if (!$slider->locale_id) {
+                $slider->locale_id = self::getDefaultLocaleId();
+            }
+        });
+    }
 }

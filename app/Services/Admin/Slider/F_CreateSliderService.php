@@ -3,6 +3,7 @@
 namespace App\Services\Admin\Slider;
 
 use App\Models\SliderImage;
+use App\Models\Locale;
 use Illuminate\Http\Response;
 use App\Enums\ErrorMessageEnum;
 use Illuminate\Http\JsonResponse;
@@ -37,11 +38,19 @@ class F_CreateSliderService
                 $imagePath = request()->file('image')->store('slider', 'public');
             }
 
+            // Get default locale if not provided
+            $localeId = request('locale_id', SliderImage::getDefaultLocaleId());
+            
+            // Verify locale exists, if not use default locale
+            if (!Locale::find($localeId)) {
+                $localeId = SliderImage::getDefaultLocaleId();
+            }
+
             $slider = SliderImage::create([
                 'image' => $imagePath,
                 'order' => request('order', 1),
                 'is_active' => request('is_active', true),
-                'locale_id' => request('locale_id')
+                'locale_id' => $localeId
             ]);
 
             DB::commit();
