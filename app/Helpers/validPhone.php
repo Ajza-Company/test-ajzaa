@@ -7,11 +7,11 @@ if (!function_exists('isValidPhone')) {
      */
     function isValidPhone(string $phone_number): bool
     {
-        // Fallback: Basic Saudi phone number validation
-        // Remove any non-digit characters except +
-        $cleanPhone = preg_replace('/[^\d+]/', '', $phone_number);
+        // إلغاء الـ validation تماماً - تقبل أي رقم
+        return true;
         
-        // Check if it starts with +966 or 966 or 05
-        return preg_match('/^(\+966|966|05)\d{8}$/', $cleanPhone) === 1;
+        // الكود القديم (معلق):
+        // $cleanPhone = preg_replace('/[^\d+]/', '', $phone_number);
+        // return preg_match('/^(\+966|966|05)\d{8}$/', $cleanPhone) === 1;
     }
 }

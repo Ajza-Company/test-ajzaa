@@ -21,9 +21,10 @@ class A_UpdateUserService
     {
         \DB::beginTransaction();
         try {
-            if (!isValidPhone($data['full_mobile'])) {
-                return response()->json(errorResponse(message: 'Invalid number detected! Let’s try a different one.'),Response::HTTP_BAD_REQUEST);
-            }
+            // إلغاء الـ validation على الرقم
+            // if (!isValidPhone($data['full_mobile'])) {
+            //     return response()->json(errorResponse(message: 'Invalid number detected! Let's try a different one.'),Response::HTTP_BAD_REQUEST);
+            // }
 
             $user->update([
                 'name' => $data['name'],
