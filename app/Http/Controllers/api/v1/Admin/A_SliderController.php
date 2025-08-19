@@ -26,7 +26,14 @@ class A_SliderController extends Controller
      */
     public function index()
     {
-        return A_ShortSliderResource::collection(SliderImage::whereIsActive(true)->get());
+        $sliders = SliderImage::where('is_active', true)
+            ->orderBy('order')
+            ->get();
+            
+        return response()->json([
+            'success' => true,
+            'data' => A_ShortSliderResource::collection($sliders)
+        ]);
     }
 
     /**
@@ -39,7 +46,7 @@ class A_SliderController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource in storage.
      */
     public function destroy(string $id)
     {

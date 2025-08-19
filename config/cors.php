@@ -22,10 +22,12 @@ return [
     'allowed_origins' => [
         'http://localhost:3000',
         'http://127.0.0.1:3000',
-        'http://localhost:18000',      // ← أضيف ده
-        'http://127.0.0.1:18000',      // ← أضيف ده
+        'http://localhost:18000',
+        'http://127.0.0.1:18000',
         'https://dashboard.ajza.net',
         'https://ajza.net',
+        'https://dev.ajza.net',
+        'https://www.dev.ajza.net',
         // Add your frontend domains here
     ],
 

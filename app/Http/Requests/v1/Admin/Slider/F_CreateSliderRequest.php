@@ -27,7 +27,27 @@ class F_CreateSliderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image'=>'required|image|mimes:jpeg,png,jpg|max:10240',
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:10240',
+            'order' => 'nullable|integer|min:1',
+            'is_active' => 'nullable|boolean',
+            'locale_id' => 'required|exists:locales,id'
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     */
+    public function messages(): array
+    {
+        return [
+            'image.required' => 'The image is required.',
+            'image.image' => 'The file must be an image.',
+            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, webp.',
+            'image.max' => 'The image may not be greater than 10MB.',
+            'order.integer' => 'The order must be an integer.',
+            'order.min' => 'The order must be at least 1.',
+            'locale_id.required' => 'The locale is required.',
+            'locale_id.exists' => 'The selected locale is invalid.'
         ];
     }
 }
