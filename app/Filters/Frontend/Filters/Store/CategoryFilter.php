@@ -20,16 +20,9 @@ class CategoryFilter
         $category = Category::find($categoryId);
         
         if ($category) {
-            // If it's a parent category, include its children
-            $categoryIds = [$category->id];
-            if (!$category->parent_id) {
-                foreach ($category->children as $child) {
-                    $categoryIds[] = $child->id;
-                }
-            }
-            
-            return $builder->whereHas('category', function ($query) use ($categoryIds) {
-                $query->whereIn('category_id', $categoryIds);
+            // Simple filter by category ID (flat structure)
+            return $builder->whereHas('category', function ($query) use ($categoryId) {
+                $query->where('category_id', $categoryId);
             });
         }
         
