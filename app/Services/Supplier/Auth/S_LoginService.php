@@ -12,6 +12,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 
 class S_LoginService
 {
@@ -32,18 +34,20 @@ class S_LoginService
     {
         try {
             $credentials = [
-                'is_registered' => true,
-                'is_active' => true,
                 'full_mobile' => $data['full_mobile'],
                 'password' => $data['password']
             ];
 
+            // Debug: Log the credentials (remove in production)
+            Log::info('Login attempt', ['mobile' => $data['full_mobile'], 'credentials' => $credentials]);
+
             $user = $this->authenticate($credentials);
 
+            // Debug: Log the result
+            Log::info('Authentication result', ['user' => $user ? $user->id : 'null']);
+
             if ($user) {
-                // Auto assign permissions if user doesn't have any
-                $this->autoAssignPermissionsIfNeeded($user);
-                
+                // Create FCM token if provided
                 if (isset($data['fcm_token'])) {
                     $this->createFcmToken->create([
                         'user_id' => $user->id,
@@ -60,13 +64,21 @@ class S_LoginService
 
             return response()->json(errorResponse(message: 'Invalid mobile number and/or password'), Response::HTTP_BAD_REQUEST);
         } catch (\Exception $exception) {
+            Log::error('Login error', ['error' => $exception->getMessage()]);
             return response()->json(errorResponse(message: trans(ErrorMessageEnum::LOGIN), error: $exception->getMessage()), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
     private function authenticate(array $credentials): ?User
     {
-        return auth()->attempt($credentials) ? auth()->user() : null;
+        // Find user by mobile and verify password manually
+        $user = User::where('full_mobile', $credentials['full_mobile'])->first();
+        
+        if ($user && Hash::check($credentials['password'], $user->password)) {
+            return $user;
+        }
+        
+        return null;
     }
 
     /**
