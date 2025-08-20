@@ -38,10 +38,12 @@ class F_LogoutController extends Controller
                 ]);
             }
             
+            // If no user is authenticated, still return success (user is already logged out)
             return response()->json([
-                'success' => false,
-                'message' => 'User not authenticated'
-            ], 401);
+                'success' => true,
+                'message' => 'Already logged out',
+                'data' => null
+            ]);
             
         } catch (\Exception $e) {
             return response()->json([

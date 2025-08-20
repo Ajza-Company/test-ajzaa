@@ -90,17 +90,14 @@ Route::prefix('v1')->group(function () {
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('delete-account', DeleteAccountController::class)->name('delete-account');
     Route::post('cancel-deletion', CancelAccountDeletionController::class)->name('cancel-deletion');
-    Route::post('logout', F_LogoutController::class)->name('logout');
 });
+
+// Logout route - public access (no auth required)
+Route::post('logout', F_LogoutController::class)->name('logout');
 
 // Protected routes that should check deletion status
 Route::middleware(['auth:sanctum', CheckAccountDeletionStatus::class])->group(function () {
     // Note: categories moved to public routes above for guest access
-    Route::get('countries', G_CountryController::class);
-    Route::prefix('cities')->group(function () {
-        Route::get('/', G_StateController::class);
-        Route::get('{city_id}/areas', G_AreaController::class);
-    });
     Route::get('v1/products', G_ProductController::class);
     Route::get('v1/notifications', G_NotificationController::class);
 });
