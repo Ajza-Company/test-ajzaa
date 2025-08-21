@@ -22,6 +22,7 @@ class A_ShortStoreResource extends JsonResource
             'address' => $this->address,
             'is_active' => (bool) $this->is_active,
             'is_approved' => (bool) $this->is_approved,
+            'can_add_products' => (bool) $this->can_add_products,
             'hours' => $this->whenLoaded('hours', S_StoreHourResource::collection($this->hours)),
         ];
     }

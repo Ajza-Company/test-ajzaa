@@ -33,6 +33,7 @@ class A_CreateCompanyRequest extends FormRequest
             'store.data.address_url' => 'nullable|string|url',
             'store.data.latitude' => 'nullable|numeric',
             'store.data.longitude' => 'nullable|numeric',
+            'store.data.can_add_products' => 'sometimes|boolean',
 
             'store.hours' => 'required|array',
             'store.hours.*.day' => 'required|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',

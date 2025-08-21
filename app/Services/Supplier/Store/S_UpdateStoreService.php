@@ -35,6 +35,7 @@ class S_UpdateStoreService
         try {
 
             $dataToUpdate = Arr::except($data['data'], ['image']);
+            $dataToUpdate['can_add_products'] = $data['data']['can_add_products'] ?? $store->can_add_products;
 
             if (!empty($dataToUpdate)) {
                 $store->update($dataToUpdate);

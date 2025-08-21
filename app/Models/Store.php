@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Auth;
 
 class Store extends Model
 {
@@ -33,6 +34,7 @@ class Store extends Model
         'parent_id',
         'company_id',
         'is_active',
+        'can_add_products',
         'address_url',
         'phone_number'
     ];
@@ -55,6 +57,7 @@ class Store extends Model
      */
     public function scopeFilter(Builder $builder, $request): Builder
     {
+        // Use frontend filter by default (works for all users)
         return (new StoreFilter($request))->filter($builder);
     }
 

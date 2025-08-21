@@ -13,6 +13,8 @@ class StoreSeeder extends Seeder
      */
     public function run(): void
     {
-        Store::factory()->count(100)->create();
+        Store::factory()->count(100)->create([
+            'can_add_products' => true // القيمة الافتراضية true
+        ]);
     }
 }

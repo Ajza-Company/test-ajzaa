@@ -64,6 +64,13 @@ return [
             'level' => env('LOG_LEVEL', 'debug'),
             'replace_placeholders' => true,
         ],
+        
+        'InterPay' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/InterPay.log'),
+            'days' => env('LOG_DAILY_DAYS', 30),
+            'level' => env('LOG_LEVEL', 'debug'),
+        ],
 
         'daily' => [
             'driver' => 'daily',

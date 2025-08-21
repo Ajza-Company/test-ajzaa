@@ -152,6 +152,7 @@ class CreateCompanyServices
         \Log::info('start create store');
 
         $data['data']['is_active'] = false;
+        $data['data']['can_add_products'] = $data['data']['can_add_products'] ?? true;
 
         $store = $this->createStoreInterface->create([
             'company_id' => $data['company_id'] ?? userCompany()->id,

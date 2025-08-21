@@ -45,6 +45,7 @@ class S_StoreController extends Controller
             userCompany()
                 ?->stores()
                 ->with(['company' => ['localized'], 'area' => ['localized', 'state' => ['localized']],'category'])
+                ->filter(\request())
                 ->adaptivePaginate()
         );
     }

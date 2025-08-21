@@ -34,6 +34,7 @@ class S_UpdateStoreRequest extends FormRequest
             'data.address_url' => 'sometimes|string|url',
             'data.phone_number' => 'sometimes|string',
             'data.is_active' => 'sometimes|boolean',
+            'data.can_add_products' => 'sometimes|boolean',
             'hours.*.day' => 'required|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',
             'hours.*.open_time' => 'nullable|date_format:H:i',
             'hours.*.close_time' => 'nullable|date_format:H:i|after:hours.*.open_time'

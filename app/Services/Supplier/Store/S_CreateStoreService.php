@@ -38,6 +38,7 @@ class S_CreateStoreService
     {
         try {
             $data['data']['is_active'] = false;
+            $data['data']['can_add_products'] = $data['data']['can_add_products'] ?? true;
 
             $store = $this->createStore->create([
                 'company_id' => userCompany()->id,

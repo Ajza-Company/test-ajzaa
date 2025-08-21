@@ -32,7 +32,8 @@ class F_ShortStoreResource extends JsonResource
             'image' => getFullUrl($this->company?->cover_image),
             'distanceAndTime' => '',
             'address' => $localizedDistance,
-            'is_open' => true
+            'is_open' => true,
+            'can_add_products' => (bool) $this->can_add_products
         ];
     }
 }

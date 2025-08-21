@@ -5,6 +5,8 @@ namespace App\Http\Controllers\api\v1\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\v1\Admin\Store\A_UpdateStoreRequest;
 use App\Http\Resources\v1\Admin\Company\A_ShortCompanyResource;
+use App\Http\Resources\v1\Admin\Store\A_ShortStoreResource;
+use App\Http\Resources\v1\Admin\Store\A_StoreResource;
 use App\Models\Store;
 use App\Repositories\Admin\Store\Find\A_FindStoreInterface;
 use Illuminate\Http\Request;
@@ -18,6 +20,18 @@ class A_StoreController extends Controller
     public function __construct(private A_FindStoreInterface $findStore)
     {
 
+    }
+
+    /**
+     * Display a listing of stores.
+     */
+    public function index()
+    {
+        return A_StoreResource::collection(
+            Store::with(['company.localized', 'area.localized', 'category.category.localized'])
+                ->filter(\request())
+                ->adaptivePaginate()
+        );
     }
 
     /**

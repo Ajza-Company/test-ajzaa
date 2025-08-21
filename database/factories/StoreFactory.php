@@ -21,7 +21,8 @@ class StoreFactory extends Factory
             'image' => randomImage()[rand(0, 10)],
             'address' => fake()->address(),
             'latitude' => fake()->latitude(),
-            'longitude' => fake()->longitude()
+            'longitude' => fake()->longitude(),
+            'can_add_products' => true, // القيمة الافتراضية true
         ];
     }
 }

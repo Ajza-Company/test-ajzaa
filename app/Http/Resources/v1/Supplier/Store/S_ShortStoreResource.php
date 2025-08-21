@@ -25,6 +25,7 @@ class S_ShortStoreResource extends JsonResource
             'longitude' => $this->longitude,
             'address' => $this->address,
             'isActive' => (bool)$this->is_active,
+            'canAddProducts' => (bool)$this->can_add_products,
             'area' => $this->whenLoaded('area', F_AreaResource::make($this->area)),
             'hours' => $this->whenLoaded('hours', S_StoreHourResource::collection($this->hours)),
             'category' => encodeString($this->category?->category_id)

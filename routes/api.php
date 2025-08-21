@@ -7,12 +7,14 @@ use App\Http\Controllers\api\v1\Frontend\F_CarTypeController;
 use App\Http\Controllers\api\v1\Frontend\F_CategoryController;
 use App\Http\Controllers\api\v1\Frontend\F_ProductController;
 use App\Http\Controllers\api\v1\Frontend\F_StoreController;
+use App\Http\Controllers\api\v1\Frontend\InterPayController;
 use App\Http\Controllers\api\v1\General\G_CountryController;
 use App\Http\Controllers\api\v1\General\G_StateController;
 use App\Http\Controllers\api\v1\General\G_AreaController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('payment/callback', F_PaymentCallbackController::class)->name('payment.callback');
+Route::post('interpay/callback', [InterPayController::class, 'callback']);
 
 // API v1 routes
 Route::prefix('v1')->group(function () {
@@ -31,6 +33,7 @@ Route::prefix('v1')->group(function () {
         Route::get('countries', G_CountryController::class);
         Route::get('cities', G_StateController::class);
         Route::get('cities/{city_id}/areas', G_AreaController::class);
+        Route::get('categories', [App\Http\Controllers\api\v1\General\CategoryController::class, 'index']);
     });
     
     // User Permissions routes
