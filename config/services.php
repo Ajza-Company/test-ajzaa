@@ -42,8 +42,12 @@ return [
             'profile_id' => env('CLICKPAY_PROFILE_ID'),
             'server_key' => env('CLICKPAY_SERVER_KEY'),
             'client_key' => env('CLICKPAY_CLIENT_KEY'),
-        ]
-
+        ],
+        'interpay' => [
+            'public_key' => env('INTERPAY_PUBLIC_KEY'),
+            'secret_key' => env('INTERPAY_SECRET_KEY'),
+            'base_url' => env('INTERPAY_BASE_URL', 'https://ecomspghostedpage.softpos-ksa.com/'),
+        ],
     ],
     'delivery' => [
         'default' => env('DEFAULT_DELIVERY_GATEWAY', 'oto'),

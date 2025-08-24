@@ -19,6 +19,7 @@ class S_TeamResource extends JsonResource
             'id' => encodeString($this->id),
             'name' => $this->name,
             'full_mobile' => $this->full_mobile,
+            'avatar' => getFullUrl($this->avatar), // إضافة صورة البروفايل
             "is_active" => (bool)$this->is_active,
             'store' => $this->whenLoaded('store', S_ShortStoreResource::make($this->store)),
             'permissions' => $this->whenLoaded('permissions', $this->permissions()->pluck('name')->toArray())

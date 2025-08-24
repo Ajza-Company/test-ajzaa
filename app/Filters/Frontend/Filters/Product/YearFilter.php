@@ -16,6 +16,6 @@ class YearFilter
      */
     public function filter(Builder $builder, mixed $value): Builder
     {
-        return $builder->whereRelation('carAttributes', 'year', $value);
+        return $builder->whereRelation('product.carAttributes', 'year', $value);
     }
 }

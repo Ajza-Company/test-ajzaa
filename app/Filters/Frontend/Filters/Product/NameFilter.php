@@ -16,8 +16,11 @@ class NameFilter
     public function filter(Builder $builder, $value): Builder
     {
         return $builder->whereHas('product', function ($query) use ($value) {
-            $query->where('part_number', 'LIKE', "%{$value}%")->orWhereHas('localized', function ($query) use ($value) {
-                $query->where('name', 'LIKE', "%{$value}%");
+            $query->where(function($subQuery) use ($value) {
+                $subQuery->where('part_number', 'LIKE', "%{$value}%")
+                        ->orWhereHas('localized', function ($localizedQuery) use ($value) {
+                            $localizedQuery->where('name', 'LIKE', "%{$value}%");
+                        });
             });
         });
     }

@@ -16,6 +16,6 @@ class CarBrandFilter
      */
     public function filter(Builder $builder, mixed $value): Builder
     {
-        return $builder->whereRelation('carAttributes', 'car_brand_id', decodeString($value));
+        return $builder->whereRelation('product.carAttributes', 'car_brand_id', decodeString($value));
     }
 }

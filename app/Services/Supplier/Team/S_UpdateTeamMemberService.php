@@ -6,6 +6,7 @@ use App\Enums\ErrorMessageEnum;
 use App\Enums\SuccessMessagesEnum;
 use App\Repositories\Supplier\User\Find\S_FindUserInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class S_UpdateTeamMemberService
 {
@@ -26,7 +27,7 @@ class S_UpdateTeamMemberService
      */
     public function update(array $data, string $userId): JsonResponse
     {
-        \DB::beginTransaction();
+        DB::beginTransaction();
         try {
             $user = $this->findUser->find(decodeString($userId));
 
@@ -34,12 +35,23 @@ class S_UpdateTeamMemberService
                 $user->syncPermissions($data['permissions']);
             }
 
-            $user->update($data['data']);
+            // Extract data from the nested structure
+            $userData = [];
+            if (isset($data['data'])) {
+                $userData = $data['data'];
+            } else {
+                // If no nested data, use the top-level data
+                $userData = array_diff_key($data, ['permissions' => true]);
+            }
 
-            \DB::commit();
+            if (!empty($userData)) {
+                $user->update($userData);
+            }
+
+            DB::commit();
             return response()->json(successResponse(trans(SuccessMessagesEnum::UPDATED)));
         } catch (\Exception $ex) {
-            \DB::rollBack();
+            DB::rollBack();
             return response()->json(errorResponse(trans(ErrorMessageEnum::UPDATE), $ex->getMessage()), 500);
         }
     }

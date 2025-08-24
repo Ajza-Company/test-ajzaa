@@ -17,7 +17,8 @@ class StoreProductFactory extends Factory
         return [
             'store_id' => Store::inRandomOrder()->first()->id ?? 1,
             'product_id' => Product::inRandomOrder()->first()->id ?? 1,
-            'price' => $this->faker->randomFloat(2, 0, 1000)
+            'price' => $this->faker->randomFloat(2, 0, 1000),
+            'quantity' => $this->faker->numberBetween(1, 100) // Add realistic quantities
         ];
     }
 }

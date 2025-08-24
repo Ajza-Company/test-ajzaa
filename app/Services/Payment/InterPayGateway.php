@@ -9,17 +9,17 @@ use App\Models\Order;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class ClickPayGateway implements PaymentGatewayInterface
+class InterPayGateway implements PaymentGatewayInterface
 {
     private string $baseUrl;
-    private string $profileId;
-    private string $serverKey;
+    private string $publicKey;
+    private string $secretKey;
 
     public function __construct()
     {
-        $this->baseUrl = config('services.payment.clickpay.base_url');
-        $this->profileId = config('services.payment.clickpay.profile_id');
-        $this->serverKey = config('services.payment.clickpay.server_key');
+        $this->baseUrl = 'https://ecomspghostedpage.softpos-ksa.com/';
+        $this->publicKey = config('services.payment.interpay.public_key');
+        $this->secretKey = config('services.payment.interpay.secret_key');
     }
 
     /**
@@ -28,38 +28,21 @@ class ClickPayGateway implements PaymentGatewayInterface
     public function createPayment(PaymentRequestDTO $request, Order $order): PaymentResponseDTO
     {
         try {
-            $response = Http::withHeaders([
-                'authorization' => $this->serverKey,
-                'content-type' => 'application/json',
-            ])->post($this->baseUrl . 'payment/request', $this->buildPaymentPayload($request, $order));
+            // InterPay uses hosted checkout page, so we return redirect URL
+            $checkoutUrl = $this->buildCheckoutUrl($request, $order);
+            
+            Log::info('InterPay checkout URL created', ['url' => $checkoutUrl]);
 
-            if (!$response->ok()) {
-                throw new PaymentGatewayException(
-                    "ClickPay API error: " . ($response['message'] ?? 'Unknown error'),
-                    $response->status()
-                );
-            }
-
-            $data = $response->json();
-            Log::info('ClickPay payment created', $data);
-
-            // If redirect URL exists, payment needs additional steps
-            if (isset($data['redirect_url'])) {
-                return new PaymentResponseDTO(
-                    status: 'pending',
-                    message: 'Redirect required to complete payment',
-                    redirectUrl: $data['redirect_url'],
-                    transactionRef: $data['tran_ref'] ?? null,
-                    rawResponse: $data
-                );
-            }
-
-            throw new PaymentGatewayException(
-                "ClickPay API error: Unable to create payment"
+            return new PaymentResponseDTO(
+                status: 'pending',
+                message: 'Redirect to InterPay checkout required',
+                redirectUrl: $checkoutUrl,
+                transactionRef: $request->cartId,
+                rawResponse: ['checkout_url' => $checkoutUrl]
             );
 
         } catch (\Exception $e) {
-            Log::error('ClickPay payment creation failed', [
+            Log::error('InterPay payment creation failed', [
                 'error' => $e->getMessage(),
                 'request' => $request
             ]);
@@ -73,32 +56,25 @@ class ClickPayGateway implements PaymentGatewayInterface
     public function verifyPayment(array $transactionRef): PaymentResponseDTO
     {
         try {
-            $response = Http::withHeaders([
-                'authorization' => $this->serverKey,
-                'content-type' => 'application/json',
-            ])->post($this->baseUrl . 'query', [
-                'profile_id' => $this->profileId,
-                'tran_ref' => $transactionRef
-            ]);
-
-            if (!$response->successful()) {
+            // For InterPay, we verify through callback data
+            // This method is called when processing callback
+            $data = $transactionRef;
+            
+            if (!isset($data['ResponseCode']) || $data['ResponseCode'] !== '00') {
                 throw new PaymentGatewayException(
-                    "Payment verification failed: " . ($response['message'] ?? 'Unknown error'),
-                    $response->status()
+                    "Payment verification failed: " . ($data['Message'] ?? 'Unknown error')
                 );
             }
 
-            $data = $response->json();
-
             return new PaymentResponseDTO(
-                status: $this->mapPaymentStatus($data['payment_result']['response_status'] ?? ''),
-                message: $data['payment_result']['response_message'] ?? 'Payment verified',
-                transactionRef: $data['tran_ref'] ?? null,
+                status: 'success',
+                message: $data['Message'] ?? 'Payment verified',
+                transactionRef: $data['TransactionId'] ?? null,
                 rawResponse: $data
             );
 
         } catch (\Exception $e) {
-            Log::error('ClickPay payment verification failed', [
+            Log::error('InterPay payment verification failed', [
                 'error' => $e->getMessage(),
                 'transactionRef' => $transactionRef
             ]);
@@ -112,34 +88,14 @@ class ClickPayGateway implements PaymentGatewayInterface
     public function refundPayment(string $transactionRef, float $amount): PaymentResponseDTO
     {
         try {
-            $response = Http::withHeaders([
-                'authorization' => $this->serverKey,
-                'content-type' => 'application/json',
-            ])->post($this->baseUrl . 'request', [
-                'profile_id' => $this->profileId,
-                'tran_type' => 'refund',
-                'tran_ref' => $transactionRef,
-                'cart_amount' => $amount
-            ]);
-
-            if (!$response->successful()) {
-                throw new PaymentGatewayException(
-                    "Refund failed: " . ($response['message'] ?? 'Unknown error'),
-                    $response->status()
-                );
-            }
-
-            $data = $response->json();
-
-            return new PaymentResponseDTO(
-                status: $this->mapPaymentStatus($data['payment_result']['response_status'] ?? ''),
-                message: $data['payment_result']['response_message'] ?? 'Refund processed',
-                transactionRef: $data['tran_ref'] ?? null,
-                rawResponse: $data
+            // InterPay refund implementation would go here
+            // For now, return not implemented
+            throw new PaymentGatewayException(
+                'Refund not implemented for InterPay yet'
             );
 
         } catch (\Exception $e) {
-            Log::error('ClickPay refund failed', [
+            Log::error('InterPay refund failed', [
                 'error' => $e->getMessage(),
                 'transactionRef' => $transactionRef,
                 'amount' => $amount
@@ -154,17 +110,26 @@ class ClickPayGateway implements PaymentGatewayInterface
     public function validateCallback(array $data): bool
     {
         try {
-            $signature = $data['signature'] ?? '';
-            unset($data['signature']);
+            // InterPay callback validation
+            // Check if required fields exist
+            $requiredFields = ['Id', 'OrderId', 'ResponseCode', 'Status'];
+            
+            foreach ($requiredFields as $field) {
+                if (!isset($data[$field])) {
+                    Log::warning('InterPay callback missing required field', ['field' => $field]);
+                    return false;
+                }
+            }
 
-            ksort($data);
-            $query = http_build_query($data);
+            // Check if payment was successful
+            if ($data['ResponseCode'] !== '00' || $data['Status'] !== '1') {
+                Log::warning('InterPay callback indicates failed payment', $data);
+                return false;
+            }
 
-            $calculatedSignature = hash_hmac('sha256', $query, $this->serverKey);
-
-            return hash_equals($calculatedSignature, $signature);
+            return true;
         } catch (\Exception $e) {
-            Log::error('ClickPay callback validation failed', [
+            Log::error('InterPay callback validation failed', [
                 'error' => $e->getMessage(),
                 'data' => $data
             ]);
@@ -172,39 +137,30 @@ class ClickPayGateway implements PaymentGatewayInterface
         }
     }
 
-    private function buildPaymentPayload(PaymentRequestDTO $request, Order $order): array
+    private function buildCheckoutUrl(PaymentRequestDTO $request, Order $order): string
     {
         $client = $order->user;
-        return [
-            'profile_id' => $this->profileId,
-            'tran_type' => 'sale',
-            'tran_class' => 'ecom',
-            'cart_id' => $request->cartId,
-            'cart_description' => $request->description,
-            'cart_currency' => 'SAR',
-            'cart_amount' => $request->amount,
-            'callback' => route('payment.callback'),
-            'return' => route('payment.status'),
-            'customer_details' => [
-                'name' => $client->name,
-                'email' => $client->email,
-                'street1' => $order->address?->address,
-                'city' => '',
-                'state' => '',
-                'country' => 'SA',
-                'ip' => request()->ip(),
-            ]
+        
+        // Build the checkout URL with parameters
+        $params = [
+            'amount' => $request->amount,
+            'order_id' => $request->cartId,
+            'customer_name' => $client->name,
+            'customer_email' => $client->email,
+            'callback_url' => route('payment.interpay.callback'),
+            'return_url' => route('payment.status'),
+            'currency' => 'SAR'
         ];
+
+        return $this->baseUrl . 'checkout?' . http_build_query($params);
     }
 
     private function mapPaymentStatus(string $status): string
     {
         return match ($status) {
-            'A' => 'success',
-            'H' => 'hold',
-            'V' => 'void',
-            'E' => 'error',
-            'D' => 'declined',
+            '1' => 'success',
+            '0' => 'failed',
+            '2' => 'pending',
             default => 'unknown'
         };
     }

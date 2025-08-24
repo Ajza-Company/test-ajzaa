@@ -154,6 +154,10 @@ class CreateCompanyServices
         $data['data']['is_active'] = false;
         $data['data']['can_add_products'] = $data['data']['can_add_products'] ?? true;
 
+        // تحديد الترتيب التلقائي
+        $maxOrder = Store::max('sort_order') ?? 0;
+        $data['data']['sort_order'] = $maxOrder + 1;
+
         $store = $this->createStoreInterface->create([
             'company_id' => $data['company_id'] ?? userCompany()->id,
             ...$data['data']

@@ -56,11 +56,21 @@ Route::middleware('guest:sanctum')->group(function () {
 Route::middleware(['auth:sanctum', SetLocale::class])->group(function () {
     Route::get('companies', [A_CompanyController::class, 'index']);
     Route::post('companies', [A_CompanyController::class, 'store']);
+    Route::get('company/show/{id}', [A_CompanyController::class, 'show']);
+    Route::post('company/update/{id}', [A_CompanyController::class, 'update']);
     Route::delete('company/{id}/delete', [A_CompanyController::class, 'destroy']);
-    Route::get('company/{id}/active', [A_CompanyController::class, 'active']);
+    Route::post('company/{id}/active', [A_CompanyController::class, 'active']);
+    
+    // Company ordering routes
+    Route::put('companies/update-order', [A_CompanyController::class, 'updateOrder']);
+    
     Route::get('stores', [A_StoreController::class, 'index']);
-    Route::post('stores/{id}/update', [A_StoreController::class, 'update']);
-    Route::post('stores/{id}/active', [A_StoreController::class, 'active']);
+    Route::post('store/update/{id}', [A_StoreController::class, 'update']);
+    Route::get('store/show/{id}', [A_StoreController::class, 'show']);
+    
+    // Store ordering routes
+    Route::put('stores/update-order', [A_StoreController::class, 'updateOrder']);
+    Route::post('store/{id}/active', [A_StoreController::class, 'active']);
     Route::post('rep-sales', [F_RepSalesController::class, 'store']);
     Route::post('rep-sales/update/{id}', [F_RepSalesController::class, 'update']);
     Route::post('rep-sales/delete/{id}', [F_RepSalesController::class, 'delete']);

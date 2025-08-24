@@ -16,13 +16,19 @@ class F_ShortRepOrderResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => encodeString($this->id),
+            'title' => $this->title,
+            'description' => $this->description,
+            'image' => getFullUrl($this->image),
+            'status' => $this->status,
+            'created_at' => $this->created_at,
             $this->merge($this->whenLoaded('repChats', function (){
-                $chat = $this->repChats()->latest()->first();
+                $chat = $this->repChats->first();
                 return [
-                    'id' => encodeString($chat?->id),
+                    'chat_id' => encodeString($chat?->id),
                     'rep_order_id' => encodeString($chat?->rep_order_id),
                     'name' => $chat?->user1?->name,
-                    'message' => G_RepChatMessageResource::make($chat?->latestMessage->load(['sender','chat','chat.user1','chat.user2']))
+                    'message' => $chat?->latestMessage ? G_RepChatMessageResource::make($chat->latestMessage->load(['sender','chat','chat.user1','chat.user2'])) : null
                 ];
             }))
         ];

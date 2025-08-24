@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class F_ProductController extends Controller
 {
@@ -37,7 +38,10 @@ class F_ProductController extends Controller
                         $query->whereHas('localized')->with(['localized']);
                     },
                     'favorite' => function ($query) {
-                        $query->where('user_id', auth('api')->id());
+                        // Only load favorites if user is authenticated
+                        if (auth('api')->check()) {
+                            $query->where('user_id', auth('api')->id());
+                        }
                     },
                     'store',
                     'offer',
@@ -48,7 +52,7 @@ class F_ProductController extends Controller
 
             return F_ShortProductResource::collection($products);
         } catch (\Exception $ex) {
-            \Log::error('Error fetching products for store: ' . $ex->getMessage());
+            Log::error('Error fetching products for store: ' . $ex->getMessage());
             return response()->json(errorResponse(
                 message: trans(ErrorMessageEnum::FETCH),
                 error: $ex->getMessage()),
@@ -68,7 +72,12 @@ class F_ProductController extends Controller
             ->whereHas('product.localized')
             ->with([
                 'product' => fn($q) => $q->whereHas('localized')->with('localized'),
-                'favorite' => fn($q) => $q->where('user_id', auth('api')->id()),
+                'favorite' => function ($query) {
+                    // Only load favorites if user is authenticated
+                    if (auth('api')->check()) {
+                        $query->where('user_id', auth('api')->id());
+                    }
+                },
                 'offer',
                 'store' => [
                     'company' => ['localized'],

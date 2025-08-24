@@ -28,9 +28,15 @@ class F_StoreController extends Controller
      */
     public function __invoke()
     {
-        return F_ShortStoreResource::collection(Store::getLocalizedStores()->whereHas('company', function ($q) {
-            $q->where('is_active', true);
-        })->whereIsActive(true)->with('category')->filter(\request())->adaptivePaginate());
+        return F_ShortStoreResource::collection(Store::getLocalizedStores()
+            ->whereHas('company', function ($q) {
+                $q->where('is_active', true);
+            })
+            ->whereIsActive(true)
+            ->with('category')
+            ->ordered() // استخدام الترتيب الجديد
+            ->filter(\request())
+            ->adaptivePaginate());
     }
 
     /**

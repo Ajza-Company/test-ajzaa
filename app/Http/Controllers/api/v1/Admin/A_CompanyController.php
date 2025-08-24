@@ -35,7 +35,14 @@ class A_CompanyController extends Controller
      */
     public function index()
     {
-        return A_ShortCompanyResource::collection($this->fetchCompany->fetch(withCount: ['stores', 'usersPivot'], with: ['user', 'stores','stores.area', 'stores.hours','category']));
+        return A_ShortCompanyResource::collection($this->fetchCompany->fetch(
+            null,
+            true,
+            ['user', 'stores' => function($query) {
+                $query->ordered(); // استخدام الترتيب الجديد للمتاجر
+            }, 'stores.area', 'stores.hours','category'],
+            ['stores', 'usersPivot']
+        )->sortBy('order')); // إضافة الترتيب حسب عمود order
     }
 
     /**
@@ -52,7 +59,26 @@ class A_CompanyController extends Controller
      */
     public function show(string $id)
     {
-        //
+        try {
+            $company = $this->findCompany->find(decodeString($id));
+            
+            if (!$company) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Company not found'
+                ], 404);
+            }
+
+            return A_ShortCompanyResource::make($company->load([
+                'user', 'stores.area', 'stores.hours', 'category', 'locales'
+            ]));
+        } catch (\Exception $ex) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Error fetching company details',
+                'error' => $ex->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -60,8 +86,45 @@ class A_CompanyController extends Controller
      */
     public function update(A_UpdateCompanyRequest $request, string $id)
     {
-        $company = $this->findCompany->find(decodeString($id));
-        return $company->update($request->validated());
+        try {
+            $company = $this->findCompany->find(decodeString($id));
+            
+            if (!$company) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Company not found'
+                ], 404);
+            }
+
+            $data = $request->validated();
+            
+            // Update company data
+            $company->update($data);
+            
+            // Handle localized data if provided
+            if (isset($data['locales'])) {
+                foreach ($data['locales'] as $locale => $localeData) {
+                    $company->locales()->updateOrCreate(
+                        ['locale' => $locale],
+                        $localeData
+                    );
+                }
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Company updated successfully',
+                'data' => A_ShortCompanyResource::make($company->fresh()->load([
+                    'user', 'stores.area', 'stores.hours', 'category', 'locales'
+                ]))
+            ]);
+        } catch (\Exception $ex) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Error updating company',
+                'error' => $ex->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -100,5 +163,37 @@ class A_CompanyController extends Controller
             }
         }
         return response()->json(successResponse(message: trans(SuccessMessagesEnum::UPDATED)));
+    }
+
+    /**
+     * Update company order
+     */
+    public function updateOrder(Request $request)
+    {
+        try {
+            $request->validate([
+                'companies' => 'required|array',
+                'companies.*.id' => 'required|integer|exists:companies,id',
+                'companies.*.order' => 'required|integer|min:0'
+            ]);
+
+            DB::beginTransaction();
+
+            foreach ($request->companies as $companyData) {
+                Company::where('id', $companyData['id'])
+                    ->update(['order' => $companyData['order']]);
+            }
+
+            DB::commit();
+
+            return response()->json(successResponse(message: 'Company order updated successfully'));
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(errorResponse(
+                message: 'Failed to update company order',
+                error: $e->getMessage()
+            ), 500);
+        }
     }
 }

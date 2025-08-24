@@ -20,8 +20,10 @@ class A_NotificationController extends Controller
     public function __invoke(A_notificationUserRequest $request)
     {
         $data = $request->validated();
+        $isSelectAll = $data['is_select_all'] ?? false;
+        
         $users = User::getUserFilter($request)
-            ->when($request->has('users') && !$data['is_select_all'], fn ($query) => $query->whereIn('id', $data['users']))
+            ->when($request->has('users') && !$isSelectAll, fn ($query) => $query->whereIn('id', $data['users']))
             ->get();
 
         Notification::send($users, new SendDynamicNotification(

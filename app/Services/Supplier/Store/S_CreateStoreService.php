@@ -40,6 +40,10 @@ class S_CreateStoreService
             $data['data']['is_active'] = false;
             $data['data']['can_add_products'] = $data['data']['can_add_products'] ?? true;
 
+            // تحديد الترتيب التلقائي
+            $maxOrder = Store::max('sort_order') ?? 0;
+            $data['data']['sort_order'] = $maxOrder + 1;
+
             $store = $this->createStore->create([
                 'company_id' => userCompany()->id,
                 ...Arr::except($data['data'], ['image'])

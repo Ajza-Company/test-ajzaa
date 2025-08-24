@@ -30,6 +30,55 @@ class F_CategoryController extends Controller
             ->ordered() // Custom sort by sort_order
             ->get();
 
+        // Apply with-stores filter if requested
+        if (request()->has('with-stores') && filter_var(request('with-stores'), FILTER_VALIDATE_BOOLEAN)) {
+            // Load stores for each category with comprehensive data
+            $categories->load(['stores' => function ($query) {
+                // Only include stores from active companies
+                $query->whereHas('company', function ($companyQuery) {
+                    $companyQuery->where('is_active', true);
+                })
+                // Only include active stores
+                ->where('is_active', true)
+                // Apply stores count limit if specified
+                ->when(request()->has('stores-count-limit') && request('stores-count-limit') > 0, function ($storeQuery) {
+                    $storeQuery->limit(request('stores-count-limit'));
+                })
+                // Load related data for comprehensive store information
+                ->with([
+                    'company.localized',      // Company name and details
+                    'area.localized',         // Store location details
+                    'category',               // Store category
+                    'hours',                  // Store operating hours
+                    'storeProducts' => function ($productQuery) {
+                        // Only include products with stock
+                        $productQuery->where('quantity', '>', 0)
+                                   ->with('product.localized');
+                    }
+                ])
+                // Add counts for additional information
+                ->withCount([
+                    'storeProducts' => function ($query) {
+                        // Count of products with stock
+                        $query->where('quantity', '>', 0);
+                    },
+                    'storeProducts as offers_count' => function ($query) {
+                        // Count of products with offers (excluding ajza offers)
+                        $query->whereHas('offer', function ($offerQuery) {
+                            $offerQuery->where('ajza_offer', false);
+                        });
+                    }
+                ]);
+            }]);
+            
+            // Add total store count for each category
+            $categories->each(function ($category) {
+                $category->stores_count = $category->stores()->whereHas('company', function ($query) {
+                    $query->where('is_active', true);
+                })->where('is_active', true)->count();
+            });
+        }
+
         return F_CategoryResource::collection($categories);
     }
 }

@@ -139,6 +139,15 @@ class User extends Authenticatable
      *
      * @return HasMany
      */
+    public function repChats(): HasMany
+    {
+        return $this->hasMany(RepChat::class, 'user1_id');
+    }
+
+    /**
+     *
+     * @return HasMany
+     */
     public function repVendorOrders(): HasMany
     {
         return $this->hasMany(RepOrder::class, 'rep_id');

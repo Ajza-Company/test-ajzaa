@@ -36,7 +36,8 @@ class Store extends Model
         'is_active',
         'can_add_products',
         'address_url',
-        'phone_number'
+        'phone_number',
+        'sort_order'
     ];
 
     /**
@@ -172,5 +173,16 @@ class Store extends Model
                 'area.state.localized',
                 'company.localized'
             ]);
+    }
+
+    /**
+     * Scope for ordering stores by sort_order
+     *
+     * @param Builder $query
+     * @return Builder
+     */
+    public function scopeOrdered(Builder $query): Builder
+    {
+        return $query->orderBy('sort_order', 'asc')->orderBy('created_at', 'asc');
     }
 }
