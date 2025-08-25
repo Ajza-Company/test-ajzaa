@@ -24,8 +24,10 @@ class G_RepChatController extends Controller
     public function index()
     {
         $user_id = auth('api')->id();
-        $chats = RepChat::where('user1_id', $user_id)
-            ->orWhere('user2_id', $user_id)
+        $chats = RepChat::where(function($query) use ($user_id) {
+                $query->where('user1_id', $user_id)
+                      ->orWhere('user2_id', $user_id);
+            })
             ->with(['user1', 'user2', 'latestMessage', 'order'])
             ->latest()
             ->filter(\request())
@@ -143,7 +145,7 @@ class G_RepChatController extends Controller
     {
         $data = $request->validated();
         $user = auth('api')->id();
-        \Log::info('$rep_offer_id: '. $rep_offer_id . ' - $data: '. json_encode($data));
+        \Illuminate\Support\Facades\Log::info('$rep_offer_id: '. $rep_offer_id . ' - $data: '. json_encode($data));
         $offer = RepOffer::findOrFail(decodeString($rep_offer_id));
         $chat = RepChat::findOrFail($data['chat_id']);
         $offer->update([
