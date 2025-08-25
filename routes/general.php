@@ -60,7 +60,7 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/products', G_ProductController::class);
 
-    Route::prefix('rep-orders')->group(function () {
+    Route::prefix('rep-orders')->middleware(['auth:sanctum'])->group(function () {
         Route::get('/chats', [G_RepChatController::class, 'index']);
         Route::get('/chats/{chat_id}', [G_RepChatController::class, 'show']);
         Route::get('/chats/{chat_id}/messages', [G_RepChatController::class, 'messages']);

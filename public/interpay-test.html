@@ -118,7 +118,7 @@
 
   <script>
     (async function () {
-      const interpay = new Interpay("pk_live_X8JMzT0ZfUOGvA7CI5qSRQLKswZyAEUUzJFywmDAe29KCY7L7Lp350NmsxkcSJaivo");
+      const interpay = new Interpay("pk_live_D8ByRFx240ankvpmLgasmQV1uGX4eJGOxTvSgPyV6tfHMoEXIXCZTxdOLPkKikzlrE"); // Use the same Public Key as backend
       
       let iframe = null;
 
@@ -129,14 +129,35 @@
           const customerName = document.getElementById('customerName').value;
           const customerEmail = document.getElementById('customerEmail').value;
 
+          // Generate token from API
+          const response = await fetch('/api/interpay/generate-token', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              amount: parseFloat(amount),
+              order_id: orderId,
+              customer_name: customerName,
+              customer_email: customerEmail,
+              customer_address1: '123 Test Street',
+              customer_address2: 'Test District',
+              customer_city: 'Riyadh',
+              customer_country_code: 'SAU'
+            })
+          });
+
+          const tokenData = await response.json();
+
+          if (!tokenData.success) {
+            throw new Error(tokenData.message || 'Failed to generate token');
+          }
+
           const model = {
             amount: amount,
-            token: "tok_VZ4sasL6Q02SWnzcZ-Bbgg", // Test token
-            authToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjE5NjhhYjdkLWJiZTItNDc5My05Y2UwLTQ2YmUyNGU3NjNhMyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2NsYWltcy9uYW1lIjoicGx1Z2lubWVyY2hhbnRAaW50ZXJwYXkuc2EiLCJqdGkiOiI4Njk4MGE3Yi03NDJmLTQ1OWMtOWYwMi03ZDQ4YzRhNjU0ZWIsIm5iZiI6MTc1NTE3ODkzNywiZXhwIjoxNzU2NDc0OTM3LCJpc3MiOiJodHRwczovL2FwaS5zb2Z0cG9zLWtzYS5jb20vIiwiYXVkIjoiaHR0cHM6Ly9hcGkuc29mdHBvcy1rc2EuY29tLyJ9.olnri1caxtsPa72AvUyt6n0QrQTS0DYR9TmYAWE9sfc",
-            orderId: orderId,
-            customerName: customerName,
-            customerEmail: customerEmail,
-            callbackUrl: window.location.origin + '/api/interpay/callback'
+            token: tokenData.data.token,
+            authToken: tokenData.data.authToken,
+            redirectUrl: window.location.origin + '/payment-success.html?order_id=' + orderId + '&amount=' + amount
           };
 
           // Clear previous iframe

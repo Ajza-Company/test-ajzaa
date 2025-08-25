@@ -98,8 +98,11 @@ class A_CompanyController extends Controller
 
             $data = $request->validated();
             
-            // Update company data
-            $company->update($data);
+            // Separate basic data from locales
+            $basicData = collect($data)->except(['locales'])->toArray();
+            
+            // Update company data (excluding locales)
+            $company->update($basicData);
             
             // Handle localized data if provided
             if (isset($data['locales'])) {

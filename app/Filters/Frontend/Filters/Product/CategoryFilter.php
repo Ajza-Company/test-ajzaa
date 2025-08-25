@@ -21,8 +21,10 @@ class CategoryFilter
         if ($category) {
             if (!$category->parent_id) {
                 $categories = [$category->id];
-                foreach ($category->children as $child) {
-                    $categories[] = $child->id;
+                if ($category->children && is_array($category->children)) {
+                    foreach ($category->children as $child) {
+                        $categories[] = $child->id;
+                    }
                 }
                 return $builder->whereHas('product', fn ($query) => $query->whereIn('category_id', $categories));
             }

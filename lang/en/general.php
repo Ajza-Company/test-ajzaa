@@ -26,4 +26,11 @@ return [
     'account_pending_deletion' => 'Account is pending deletion for 15 days',
     'account_deleted_cannot_access' => 'Account is deleted and cannot be accessed',
     'account_inactive_cannot_access' => 'Account is inactive and cannot access this feature',
+    
+    // Success messages
+    'success' => [
+        'created' => 'Resource created successfully',
+        'updated' => 'Resource updated successfully',
+        'deleted' => 'Resource deleted successfully',
+    ],
 ];

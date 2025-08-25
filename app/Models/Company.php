@@ -30,6 +30,16 @@ class Company extends Model
     }
 
     /**
+     * Get all locales for this company
+     *
+     * @return HasMany
+     */
+    public function locales(): HasMany
+    {
+        return $this->hasMany(CompanyLocale::class);
+    }
+
+    /**
      *
      * @return HasMany
      */

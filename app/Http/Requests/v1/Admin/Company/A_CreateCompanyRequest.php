@@ -69,7 +69,7 @@ class A_CreateCompanyRequest extends FormRequest
             'company.commercial_register_file' => 'sometimes|nullable|file|max:2048',
             'company.localized'=>'required|array|min:1',
             'company.localized.*.local_id'=>'required_with:company.localized|integer|exists:locales,id',
-            'company.localized.*.name'=>'required_with:company.localized|string|max:100|min:5',
+            'company.localized.*.name'=>'required_with:company.localized|string|max:100|min:2',
             'company.category_id'=>'required|integer|exists:categories,id'
         ];
     }

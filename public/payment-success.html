@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful - Ajza</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 40px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        .message {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .order-details {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        .order-details h3 {
+            margin-top: 0;
+            color: #333;
+            font-size: 18px;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: bold;
+            color: #555;
+        }
+        .detail-value {
+            color: #333;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            margin-left: 15px;
+        }
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon" id="statusIcon">✓</div>
+        <h1 id="statusTitle">Payment Successful!</h1>
+        <p class="message" id="statusMessage">
+            Thank you for your payment. Your transaction has been completed successfully.
+            You will receive a confirmation email shortly.
+        </p>
+        
+        <div class="order-details">
+            <h3>Transaction Details</h3>
+            <div class="detail-row">
+                <span class="detail-label">Order ID:</span>
+                <span class="detail-value" id="orderId">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Transaction ID:</span>
+                <span class="detail-value" id="transactionId">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Status:</span>
+                <span class="detail-value" id="status">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Response Code:</span>
+                <span class="detail-value" id="responseCode">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Response Text:</span>
+                <span class="detail-value" id="responseText">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Approval Code:</span>
+                <span class="detail-value" id="approvalCode">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">RR Number:</span>
+                <span class="detail-value" id="rrNumber">Loading...</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Transaction Time:</span>
+                <span class="detail-value" id="transactionTime">Loading...</span>
+            </div>
+        </div>
+        
+        <a href="/" class="btn">Continue Shopping</a>
+        <a href="/dashboard" class="btn btn-secondary">Go to Dashboard</a>
+    </div>
+
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Get response data from URL
+        const status = urlParams.get('status');
+        const message = urlParams.get('message');
+        const responseCode = urlParams.get('responseCode');
+        const responseText = urlParams.get('responseText');
+        const transactionId = urlParams.get('TransactionId');
+        const orderId = urlParams.get('ecommerceOrderId');
+        const approvalCode = urlParams.get('approvalCode');
+        const rrNumber = urlParams.get('rrNumber');
+        const transactionTime = urlParams.get('TransactionTime');
+        
+        // Update UI based on status
+        if (status === '1') {
+            // Success
+            document.getElementById('statusIcon').innerHTML = '✓';
+            document.getElementById('statusIcon').style.background = '#4CAF50';
+            document.getElementById('statusTitle').textContent = 'Payment Successful!';
+            document.getElementById('statusTitle').style.color = '#4CAF50';
+            document.getElementById('statusMessage').textContent = 'Thank you for your payment. Your transaction has been completed successfully.';
+        } else {
+            // Failed
+            document.getElementById('statusIcon').innerHTML = '✗';
+            document.getElementById('statusIcon').style.background = '#f44336';
+            document.getElementById('statusTitle').textContent = 'Payment Failed!';
+            document.getElementById('statusTitle').style.color = '#f44336';
+            document.getElementById('statusMessage').textContent = 'Sorry, your payment could not be processed. Please try again or contact support.';
+        }
+        
+        // Update transaction details
+        document.getElementById('orderId').textContent = orderId || 'N/A';
+        document.getElementById('transactionId').textContent = transactionId || 'N/A';
+        document.getElementById('status').textContent = status === '1' ? 'SUCCESS' : 'FAILED';
+        document.getElementById('status').style.color = status === '1' ? '#4CAF50' : '#f44336';
+        document.getElementById('status').style.fontWeight = 'bold';
+        document.getElementById('responseCode').textContent = responseCode || 'N/A';
+        document.getElementById('responseText').textContent = responseText || 'N/A';
+        document.getElementById('approvalCode').textContent = approvalCode || 'N/A';
+        document.getElementById('rrNumber').textContent = rrNumber || 'N/A';
+        document.getElementById('transactionTime').textContent = transactionTime ? new Date(transactionTime).toLocaleString() : 'N/A';
+        
+        // Log transaction details for debugging
+        console.log('Payment Response Page Loaded');
+        console.log('Status:', status);
+        console.log('Response Code:', responseCode);
+        console.log('Message:', message);
+        console.log('All URL Parameters:', Object.fromEntries(urlParams));
+        
+        // Show response code description
+        if (responseCode) {
+            const responseCodeDescriptions = {
+                '00': 'APPROVAL - Transaction approved successfully',
+                '02': 'CALL ISSUER - Contact card issuer',
+                '03': 'INVALID MERCHANT - Merchant not found',
+                '05': 'DECLINED - Transaction declined',
+                '06': 'UNABLE TO REVERSE - Cannot reverse transaction',
+                '08': 'ISSUER TIMEOUT - Issuer timeout',
+                '09': 'ISSUER UNAVAILABLE - Issuer unavailable',
+                '12': 'INVALID TRANSACTION - Invalid transaction',
+                '13': 'INVALID AMOUNT - Invalid amount',
+                '14': 'INVALID CARD NUMBER - Invalid card number',
+                '30': 'FORMAT ERROR - Format error',
+                '31': 'INVALID ISSUER - Invalid issuer',
+                '41': 'LOST CARD - Lost card',
+                '43': 'STOLEN CARD - Stolen card',
+                '51': 'INSUFFICIENT FUNDS - Insufficient funds',
+                '54': 'EXPIRED CARD - Expired card',
+                '60': 'PROCESSOR DECLINE - Processor decline',
+                '61': 'RESTRICTED CARD - Restricted card',
+                '62': 'SUSPECTED FRAUD - Suspected fraud',
+                '64': 'STOP PAYMENT - Stop payment',
+                '78': 'ORIGINAL NOT FOUND - Original not found',
+                '79': 'DECLINED CVV2 - CVV2 declined',
+                '90': 'ISSUER DECLINE - Issuer decline',
+                '91': 'SWITCH UNAVAILABLE - Switch unavailable',
+                '94': 'DUPLICATE TXN - Duplicate transaction',
+                '96': 'ERROR SYSTEM - System error',
+                'AE': 'TIMEOUT - Timeout',
+                'NR': 'NO RESPONSE - No response'
+            };
+            
+            const description = responseCodeDescriptions[responseCode] || 'Unknown response code';
+            console.log('Response Code Description:', description);
+        }
+    </script>
+</body>
+</html>

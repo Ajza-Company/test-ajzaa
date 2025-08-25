@@ -14,7 +14,18 @@ use App\Http\Controllers\api\v1\General\G_AreaController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('payment/callback', F_PaymentCallbackController::class)->name('payment.callback');
-Route::post('interpay/callback', [InterPayController::class, 'callback']);
+
+// InterPay Routes
+Route::prefix('interpay')->group(function () {
+    Route::post('/generate-token', [App\Http\Controllers\api\v1\InterPay\InterPayController::class, 'generateToken']);
+    Route::post('/callback', [App\Http\Controllers\api\v1\InterPay\InterPayController::class, 'callback']);
+});
+
+// Test Routes
+Route::prefix('test')->group(function () {
+    Route::post('/broadcast', [App\Http\Controllers\api\v1\Test\TestBroadcastController::class, 'testBroadcast']);
+    Route::post('/private-channel', [App\Http\Controllers\api\v1\Test\TestBroadcastController::class, 'testPrivateChannel']);
+});
 
 // API v1 routes
 Route::prefix('v1')->group(function () {

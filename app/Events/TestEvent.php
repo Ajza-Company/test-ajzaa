@@ -9,7 +9,6 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 class TestEvent implements ShouldBroadcast
 {
@@ -17,29 +16,44 @@ class TestEvent implements ShouldBroadcast
 
     public $message;
 
+    /**
+     * Create a new event instance.
+     */
     public function __construct($message)
     {
         $this->message = $message;
     }
 
-    public function broadcastOn()
+    /**
+     * Get the channels the event should broadcast on.
+     *
+     * @return array<int, \Illuminate\Broadcasting\Channel>
+     */
+    public function broadcastOn(): array
     {
-        return new Channel('test-channel');
+        return [
+            new Channel('test-channel'),
+            new PrivateChannel('private-user.1'),
+        ];
     }
 
-    // Optional: Customize the event name
-    public function broadcastAs()
-    {
-        return 'test.message';
-    }
-
-    // Optional: Customize the data
-    public function broadcastWith()
+    /**
+     * Get the data to broadcast.
+     */
+    public function broadcastWith(): array
     {
         return [
             'message' => $this->message,
-            'hello' => 'world',
             'timestamp' => now()->toISOString(),
+            'user_id' => 'guest',
         ];
+    }
+
+    /**
+     * The event's broadcast name.
+     */
+    public function broadcastAs(): string
+    {
+        return 'TestEvent';
     }
 }

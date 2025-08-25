@@ -90,7 +90,7 @@ class CreateCompanyServices
             'full_mobile' => $data['full_mobile'],
             'avatar' => $avatar,
             'is_registered' => true,
-            'gender' => $data['gender'],
+            'gender' => $data['gender'] ?? null,
             'password' => Hash::make($data['password']),
             'preferred_language' => $data['preferred_language'] ?? app()->getLocale(),
         ]);
@@ -125,8 +125,8 @@ class CreateCompanyServices
             'logo'=>$logo,
             'cover_image'=>$coverImage,
             'category_id'=>$data['category_id'],
-            'commercial_register'=>$data['commercial_register'],
-            'vat_number'=>$data['vat_number'],
+            'commercial_register'=>$data['commercial_register'] ?? null,
+            'vat_number'=>$data['vat_number'] ?? null,
             'commercial_register_file'=>$commercialRegisterFile,
             'car_brand_id'=>$data['car_brand_id'],
         ]);
@@ -197,8 +197,8 @@ class CreateCompanyServices
             $resultArr[] = [
                 "store_id" => $store->id,
                 'day' => $hour['day'],
-                "open_time" => $hour['open_time'],
-                "close_time" => $hour['close_time'],
+                "open_time" => $hour['open_time'] ?? null,
+                "close_time" => $hour['close_time'] ?? null,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ];

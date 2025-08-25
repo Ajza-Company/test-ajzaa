@@ -26,4 +26,11 @@ return [
     'account_pending_deletion' => 'الحساب معلق للحذف خلال 15 يوم',
     'account_deleted_cannot_access' => 'الحساب محذوف ولا يمكن الوصول إليه',
     'account_inactive_cannot_access' => 'الحساب غير نشط ولا يمكن الوصول إلى هذه الميزة',
+    
+    // Success messages
+    'success' => [
+        'created' => 'تم إنشاء الموارد بنجاح',
+        'updated' => 'تم تحديث الموارد بنجاح',
+        'deleted' => 'تم حذف الموارد بنجاح',
+    ],
 ];

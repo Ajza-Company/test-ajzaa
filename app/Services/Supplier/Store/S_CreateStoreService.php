@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 
 class S_CreateStoreService
 {
@@ -54,6 +55,18 @@ class S_CreateStoreService
                 'category_id' => userCompany()->category_id
             ]);
 
+            // Add car brands if provided
+            if (isset($data['data']['car_brand_id']) && is_array($data['data']['car_brand_id'])) {
+                foreach ($data['data']['car_brand_id'] as $carBrandId) {
+                    DB::table('store_car_brands')->insert([
+                        'store_id' => $store->id,
+                        'car_brand_id' => $carBrandId,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ]);
+                }
+            }
+
             if (isset($data['image'])) {
                 $path = uploadFile("store-$store->id", $data['image']);
                 $store->update(['image' => $path]);
@@ -61,7 +74,7 @@ class S_CreateStoreService
 
             $this->insertStoreHour->insert($this->prepareBulkInsert($data['hours'], $store));
 
-            \DB::table('store_users')->insert([
+            DB::table('store_users')->insert([
                 'store_id' => $store->id,
                 'user_id' => $user_id ?? auth('api')->id(),
                 'created_at' => Carbon::now(),

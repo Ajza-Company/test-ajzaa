@@ -34,7 +34,8 @@ class S_CreateStoreRequest extends FormRequest
             'data.latitude' => 'required|numeric',
             'data.longitude' => 'required|numeric',
             'data.can_add_products' => 'sometimes|boolean',
-//            'data.category_id' => 'sometimes|integer|exists:categories,id',
+            'data.car_brand_id' => 'sometimes|array',
+            'data.car_brand_id.*' => 'sometimes|integer|exists:car_brands,id',
             'hours' => 'required|array',
             'hours.*.day' => 'required|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',
             'hours.*.open_time' => 'nullable|date_format:H:i',
@@ -49,5 +50,6 @@ class S_CreateStoreRequest extends FormRequest
     {
         $this->decodeInput('data.area_id');
         $this->decodeInput('data.category_id');
+        $this->decodeSimpleArrayInput('data.car_brand_id.*');
     }
 }

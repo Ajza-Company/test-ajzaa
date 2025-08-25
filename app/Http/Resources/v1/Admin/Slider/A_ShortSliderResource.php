@@ -27,15 +27,9 @@ class A_ShortSliderResource extends JsonResource
     private function getImageUrl(): ?string
     {
         if ($this->image) {
-            // Try to get URL from storage
-            $url = Storage::url($this->image);
-            
-            // If storage URL doesn't work, construct direct URL
-            if (str_contains($url, '/storage/')) {
-                return 'https://dev.ajza.net/storage/' . str_replace('/storage/', '', $this->image);
-            }
-            
-            return $url;
+            // Use Storage::url() which will respect the APP_URL from .env
+            // This will automatically work for both local and production
+            return Storage::url($this->image);
         }
         return null;
     }
