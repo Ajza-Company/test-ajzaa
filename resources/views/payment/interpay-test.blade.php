@@ -109,22 +109,22 @@
         
         <div class="amount-display">
             Test Amount: SAR 1.01
-        </div>
-        
+            </div>
+            
         <div class="status" id="status">
             <strong>Status:</strong> Ready to generate payment tokens
-        </div>
-        
+            </div>
+            
         <div style="text-align: center; margin: 20px 0;">
             <button class="btn" id="generateBtn" onclick="generateTokens()">Generate Payment Tokens</button>
-        </div>
-        
+            </div>
+            
         <div class="payment-form" id="paymentForm">
             <div style="text-align: center;">
                 <div class="loading"></div>
                 <p>Click "Generate Payment Tokens" to start</p>
             </div>
-        </div>
+                </div>
     </div>
 
     <script>

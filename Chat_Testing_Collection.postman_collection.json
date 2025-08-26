@@ -1,0 +1,215 @@
+{
+	"info": {
+		"_postman_id": "chat-testing-collection",
+		"name": "Chat Testing Collection",
+		"description": "Collection for testing chat functionality with broadcasting",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Broadcasting Tests",
+			"item": [
+				{
+					"name": "Test Public Broadcast",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"message\": \"Hello from Postman!\",\n    \"channel\": \"test-channel\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/test/broadcast",
+							"host": ["{{base_url}}"],
+							"path": ["api", "test", "broadcast"]
+						}
+					}
+				},
+				{
+					"name": "Test Private Channel",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": 1,\n    \"message\": \"Private message from Postman!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/test/private-channel",
+							"host": ["{{base_url}}"],
+							"path": ["api", "test", "private-channel"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Support Chat",
+			"item": [
+				{
+					"name": "Create Support Chat",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"subject\": \"Test Support Request\",\n    \"message\": \"Hello, I need help with my order\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/support/chats",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "support", "chats"]
+						}
+					}
+				},
+				{
+					"name": "Get Support Chats",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/support/chats",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "support", "chats"]
+						}
+					}
+				},
+				{
+					"name": "Send Support Message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"message\": \"This is a test message from Postman!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/support/chats/{{support_chat_id}}/messages",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "support", "chats", "{{support_chat_id}}", "messages"]
+						}
+					}
+				},
+				{
+					"name": "Get Support Messages",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/support/chats/{{support_chat_id}}/messages",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "support", "chats", "{{support_chat_id}}", "messages"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Repair Chat",
+			"item": [
+				{
+					"name": "Get Repair Chats",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/rep-orders/chats",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "rep-orders", "chats"]
+						}
+					}
+				},
+				{
+					"name": "Send Repair Message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"message\": \"Test repair message from Postman!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/rep-orders/chats/{{repair_chat_id}}/messages",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "rep-orders", "chats", "{{repair_chat_id}}", "messages"]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "your_auth_token_here",
+			"type": "string"
+		},
+		{
+			"key": "support_chat_id",
+			"value": "support_chat_id_here",
+			"type": "string"
+		},
+		{
+			"key": "repair_chat_id",
+			"value": "repair_chat_id_here",
+			"type": "string"
+		}
+	]
+}

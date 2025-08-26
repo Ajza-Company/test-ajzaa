@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Broadcasting Test</title>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        #messages { background: #f5f5f5; padding: 15px; border-radius: 5px; max-height: 400px; overflow-y: auto; }
+        .message { margin: 5px 0; padding: 5px; border-left: 3px solid #007bff; }
+    </style>
+</head>
+<body>
+    <h1>🔊 Broadcasting Test Page</h1>
+    
+    <div class="test-section">
+        <h3>📡 Connection Status</h3>
+        <div id="connectionStatus">Connecting...</div>
+    </div>
+
+    <div class="test-section">
+        <h3>🧪 Test Broadcasting</h3>
+        <button onclick="testPublicBroadcast()">Test Public Channel</button>
+        <button onclick="testPrivateChannel()">Test Private Channel</button>
+        <button onclick="testSupportChat()">Test Support Chat</button>
+    </div>
+
+    <div class="test-section">
+        <h3>📨 Received Messages</h3>
+        <div id="messages"></div>
+    </div>
+
+    <script>
+        // Initialize Pusher
+        const pusher = new Pusher('8fbfa5e46ca11d34a99b', {
+            cluster: 'mt1', // Update this with your cluster
+            encrypted: true
+        });
+
+        // Connection status
+        pusher.connection.bind('connected', () => {
+            document.getElementById('connectionStatus').innerHTML = '<span class="success">✅ Connected to Pusher</span>';
+        });
+
+        pusher.connection.bind('disconnected', () => {
+            document.getElementById('connectionStatus').innerHTML = '<span class="error">❌ Disconnected from Pusher</span>';
+        });
+
+        pusher.connection.bind('error', (err) => {
+            document.getElementById('connectionStatus').innerHTML = '<span class="error">❌ Error: ' + err.message + '</span>';
+        });
+
+        // Listen to test channel
+        const testChannel = pusher.subscribe('test-channel');
+        testChannel.bind('test.event', (data) => {
+            addMessage('📡 Test Channel', data);
+        });
+
+        // Listen to private test channel
+        const privateChannel = pusher.subscribe('private-test-private-channel');
+        privateChannel.bind('test.event', (data) => {
+            addMessage('🔒 Private Channel', data);
+        });
+
+        // Listen to support chat channel (example)
+        const supportChannel = pusher.subscribe('private-support-chat-123');
+        supportChannel.bind('message.sent', (data) => {
+            addMessage('💬 Support Chat', data);
+        });
+
+        // Add message to display
+        function addMessage(channel, data) {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            messageDiv.innerHTML = `
+                <strong>${channel}</strong><br>
+                <small>${new Date().toLocaleTimeString()}</small><br>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Test functions
+        async function testPublicBroadcast() {
+            try {
+                const response = await fetch('/api/test/broadcast', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                    },
+                    body: JSON.stringify({
+                        message: 'Hello from frontend test!',
+                        channel: 'test-channel'
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    addMessage('🧪 Test Sent', result.data);
+                } else {
+                    addMessage('❌ Test Failed', result);
+                }
+            } catch (error) {
+                addMessage('❌ Error', { error: error.message });
+            }
+        }
+
+        async function testPrivateChannel() {
+            try {
+                const response = await fetch('/api/test/private-channel', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                    },
+                    body: JSON.stringify({
+                        user_id: 1,
+                        message: 'Private message from frontend!'
+                    })
+                });
+                
+                const result = await response.json();
+                if (result.success) {
+                    addMessage('🧪 Private Test Sent', result.data);
+                } else {
+                    addMessage('❌ Private Test Failed', result);
+                }
+            } catch (error) {
+                addMessage('❌ Error', { error: error.message });
+            }
+        }
+
+        function testSupportChat() {
+            addMessage('🧪 Support Chat Test', { 
+                message: 'Simulating support chat message',
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Add initial message
+        addMessage('ℹ️ Info', { message: 'Page loaded. Broadcasting system ready for testing!' });
+    </script>
+</body>
+</html>
