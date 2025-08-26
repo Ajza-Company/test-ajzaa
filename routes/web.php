@@ -78,43 +78,26 @@ Route::get('/test-chat-event', function() {
     }
 });
 
-// Test route for private-support-chat.24 channel
+// Test route for private-support-chat.24 channel (simplified)
 Route::get('/test-support-chat-24', function() {
     try {
-        // Try to find an existing support chat message first
-        $existingMessage = App\Models\SupportChatMessage::where('support_chat_id', 24)->first();
+        // Use the new dedicated event class
+        event(new App\Events\TestSupportChatMessageSent(
+            'Test message from test route for support chat 24!',
+            24
+        ));
         
-        if ($existingMessage) {
-            // Use existing message to dispatch event
-            event(new App\Events\v1\General\G_SupportMessageSent($existingMessage));
-            
-            return response()->json([
-                'success' => true,
-                'message' => 'Support message event dispatched successfully!',
-                'channel' => 'private-support-chat.24',
-                'event' => 'message.sent',
-                'data' => [
-                    'message' => $existingMessage->message,
-                    'chat_id' => $existingMessage->support_chat_id,
-                    'timestamp' => $existingMessage->created_at
-                ]
-            ]);
-        } else {
-            // Create a simple test event that broadcasts to the channel
-            broadcast(new App\Events\SimpleTestEvent('Test message for support chat 24!'));
-            
-            return response()->json([
-                'success' => true,
-                'message' => 'Test event dispatched to test-channel (fallback)',
-                'channel' => 'test-channel',
-                'event' => 'test.message',
-                'note' => 'No existing support messages found for chat 24. Using test channel instead.',
-                'data' => [
-                    'message' => 'Test message for support chat 24!',
-                    'timestamp' => now()->toISOString()
-                ]
-            ]);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Support message event dispatched successfully!',
+            'channel' => 'private-support-chat.24',
+            'event' => 'message.sent',
+            'data' => [
+                'message' => 'Test message from test route for support chat 24!',
+                'chat_id' => 24,
+                'timestamp' => now()->toISOString()
+            ]
+        ]);
     } catch (\Exception $e) {
         return response()->json([
             'success' => false,
@@ -126,40 +109,11 @@ Route::get('/test-support-chat-24', function() {
 // Simple broadcast to support chat 24 channel
 Route::get('/broadcast-support-24', function() {
     try {
-        // Create a simple event that broadcasts to the support chat channel
-        $event = new class implements \Illuminate\Contracts\Broadcasting\ShouldBroadcast {
-            use \Illuminate\Broadcasting\InteractsWithSockets, \Illuminate\Queue\SerializesModels;
-            
-            public $message;
-            public $chatId;
-            
-            public function __construct() {
-                $this->message = 'Hello from broadcast route! This is a test message for support chat 24!';
-                $this->chatId = 24;
-            }
-            
-            public function broadcastOn(): array {
-                return [
-                    new \Illuminate\Broadcasting\PrivateChannel('support.chat.' . $this->chatId)
-                ];
-            }
-            
-            public function broadcastWith(): array {
-                return [
-                    'message' => $this->message,
-                    'chat_id' => $this->chatId,
-                    'timestamp' => now()->toISOString(),
-                    'test' => true
-                ];
-            }
-            
-            public function broadcastAs(): string {
-                return 'message.sent';
-            }
-        };
-        
-        // Broadcast the event
-        broadcast($event);
+        // Dispatch the new named event
+        event(new App\Events\TestSupportChatMessageSent(
+            'Hello from broadcast route! This is a test message for support chat 24!',
+            24
+        ));
         
         return response()->json([
             'success' => true,
@@ -167,16 +121,16 @@ Route::get('/broadcast-support-24', function() {
             'channel' => 'private-support-chat.24',
             'event' => 'message.sent',
             'data' => [
-                'message' => $event->message,
-                'chat_id' => $event->chatId,
+                'message' => 'Hello from broadcast route! This is a test message for support chat 24!',
+                'chat_id' => 24,
                 'timestamp' => now()->toISOString()
             ]
         ]);
-        
     } catch (\Exception $e) {
         return response()->json([
             'success' => false,
-            'error' => $e->getMessage()
+            'message' => 'Error broadcasting message: ' . $e->getMessage(),
+            'error_details' => $e->getTraceAsString()
         ], 500);
     }
 });
