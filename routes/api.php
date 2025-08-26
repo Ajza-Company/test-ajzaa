@@ -19,6 +19,7 @@ Route::post('payment/callback', F_PaymentCallbackController::class)->name('payme
 Route::prefix('interpay')->group(function () {
     Route::post('/generate-token', [App\Http\Controllers\api\v1\InterPay\InterPayController::class, 'generateToken']);
     Route::post('/callback', [App\Http\Controllers\api\v1\InterPay\InterPayController::class, 'callback']);
+    Route::post('/generate-tokens', [App\Http\Controllers\api\v1\Frontend\InterPayController::class, 'generateTokens']);
 });
 
 // Test Routes
@@ -45,6 +46,18 @@ Route::prefix('v1')->group(function () {
         Route::get('cities', G_StateController::class);
         Route::get('cities/{city_id}/areas', G_AreaController::class);
         Route::get('categories', [App\Http\Controllers\api\v1\General\CategoryController::class, 'index']);
+    });
+
+    // Custom Categories routes
+    Route::prefix('companies')->group(function () {
+        Route::get('{company}/custom-categories', [App\Http\Controllers\api\v1\CustomCategoryController::class, 'index']);
+        Route::post('{company}/custom-categories', [App\Http\Controllers\api\v1\CustomCategoryController::class, 'store']);
+        Route::put('custom-categories/{category}', [App\Http\Controllers\api\v1\CustomCategoryController::class, 'update']);
+        Route::delete('custom-categories/{category}', [App\Http\Controllers\api\v1\CustomCategoryController::class, 'destroy']);
+        
+        // Company Products routes
+        Route::get('{company}/products', [App\Http\Controllers\api\v1\CompanyProductController::class, 'index']);
+        Route::get('{company}/categories/{category}/products', [App\Http\Controllers\api\v1\CompanyProductController::class, 'getByCategory']);
     });
     
     // User Permissions routes

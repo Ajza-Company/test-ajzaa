@@ -65,9 +65,9 @@ return [
             'replace_placeholders' => true,
         ],
         
-        'InterPay' => [
+        'interpay' => [
             'driver' => 'daily',
-            'path' => storage_path('logs/InterPay.log'),
+            'path' => storage_path('logs/interpay.log'),
             'days' => env('LOG_DAILY_DAYS', 30),
             'level' => env('LOG_LEVEL', 'debug'),
         ],

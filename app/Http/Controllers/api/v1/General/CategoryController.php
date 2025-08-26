@@ -13,7 +13,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return Category::ordered()
+        return Category::system()
+            ->ordered()
             ->where('is_active', true)
             ->with('localized')
             ->get();

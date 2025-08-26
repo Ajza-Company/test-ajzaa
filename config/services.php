@@ -47,6 +47,7 @@ return [
             'public_key' => env('INTERPAY_PUBLIC_KEY'),
             'secret_key' => env('INTERPAY_SECRET_KEY'),
             'base_url' => env('INTERPAY_BASE_URL', 'https://ecomspghostedpage.softpos-ksa.com/'),
+            'api_base_url' => env('INTERPAY_API_BASE_URL', 'https://interpayapimanagement.azure-api.net'),
         ],
     ],
     'delivery' => [

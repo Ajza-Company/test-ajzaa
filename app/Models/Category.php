@@ -17,6 +17,15 @@ class Category extends Model
     use HasFactory, HasLocalized;
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'category_type' => 'string',
+    ];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -24,7 +33,9 @@ class Category extends Model
     protected $fillable = [
         'image',
         'is_active',
-        'sort_order'
+        'sort_order',
+        'category_type',
+        'company_id'
     ];
 
     /**
@@ -60,6 +71,22 @@ class Category extends Model
         return $this->hasMany(CategoryLocale::class);
     }
 
+    /**
+     * Get the company that owns the custom category
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    /**
+     * Get the products for this category
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
     // Parent/children relationships removed - using flat structure now
 
     /**
@@ -82,5 +109,45 @@ class Category extends Model
     public function scopeFilter(Builder $builder, $request): Builder
     {
         return (new CategoryFilter($request))->filter($builder);
+    }
+
+    /**
+     * Scope for system categories only
+     */
+    public function scopeSystem(Builder $query): Builder
+    {
+        return $query->where('category_type', 'system');
+    }
+
+    /**
+     * Scope for custom categories only
+     */
+    public function scopeCustom(Builder $query): Builder
+    {
+        return $query->where('category_type', 'custom');
+    }
+
+    /**
+     * Scope for custom categories of a specific company
+     */
+    public function scopeForCompany(Builder $query, $companyId): Builder
+    {
+        return $query->where('category_type', 'custom')->where('company_id', $companyId);
+    }
+
+    /**
+     * Check if category is system category
+     */
+    public function isSystem(): bool
+    {
+        return $this->category_type === 'system';
+    }
+
+    /**
+     * Check if category is custom category
+     */
+    public function isCustom(): bool
+    {
+        return $this->category_type === 'custom';
     }
 }

@@ -13,6 +13,7 @@ Add these variables to your `.env` file:
 INTERPAY_PUBLIC_KEY=pk_live_X8JMzT0ZfUOGvA7CI5qSRQLKswZyAEUUzJFywmDAe29KCY7L7Lp350NmsxkcSJaivo
 INTERPAY_SECRET_KEY=your_interpay_secret_key_here
 INTERPAY_BASE_URL=https://ecomspghostedpage.softpos-ksa.com/
+INTERPAY_API_BASE_URL=https://interpayapimanagement.azure-api.net
 ```
 
 ### 2. Callback URL Setup
@@ -23,7 +24,14 @@ In your InterPay dashboard, set the callback URL to:
 
 ## 🔧 Implementation Details
 
-### Payment Flow
+### New Token-Based Payment Flow
+1. **Generate Tokens**: Call InterPay API to create payment tokens
+2. **Create Checkout**: Use generated tokens in hosted iframe
+3. **Payment Processing**: User completes payment in iframe
+4. **Callback**: InterPay sends payment result to your callback URL
+5. **Order Update**: Order status is updated based on payment result
+
+### Legacy Payment Flow
 1. **Create Payment**: User initiates payment
 2. **Redirect to InterPay**: User is redirected to InterPay hosted checkout
 3. **Payment Processing**: User completes payment on InterPay
@@ -68,23 +76,34 @@ In your InterPay dashboard, set the callback URL to:
 
 ## 🧪 Testing
 
+### New Implementation Testing
+1. **Test Form**: Visit `/interpay/test-form` to test all features
+2. **Quick Checkout**: `/interpay/checkout` for default test (SAR 1.01)
+3. **Custom Checkout**: `/interpay/custom-checkout` with custom order details
+4. **API Testing**: Use the test form to test token generation API
+
 ### Test Card Details
 - **Token**: `tok_VZ4sasL6Q02SWnzcZ-Bbgg`
 - **Amount**: `1.01`
 
 ### Test Flow
 1. Create a test order
-2. Initiate payment with InterPay
-3. Use test card details
-4. Check callback logs
-5. Verify order status update
+2. Generate tokens via InterPay API
+3. Use generated tokens in iframe
+4. Complete payment with test card
+5. Check callback logs
+6. Verify order status update
 
 ## 📁 Files Modified
 
 1. **`app/Services/Payment/InterPayGateway.php`** - Updated to work with InterPay
 2. **`app/Http/Controllers/api/v1/Frontend/InterPayController.php`** - Enhanced callback handling
-3. **`config/services.php`** - Added InterPay configuration
-4. **`routes/api.php`** - InterPay callback route already exists
+3. **`app/Services/Payment/InterPayTokenService.php`** - New service for token generation
+4. **`app/Http/Controllers/InterPayController.php`** - New controller for checkout and token management
+5. **`config/services.php`** - Added InterPay configuration
+6. **`routes/web.php`** - Added InterPay routes
+7. **`resources/views/payment/interpay-checkout.blade.php`** - New checkout template
+8. **`resources/views/payment/interpay-test-form.blade.php`** - Test form for development
 
 ## 🔍 Logging
 
