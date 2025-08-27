@@ -1,0 +1,328 @@
+{
+    "info": {
+        "name": "Custom Categories API - Complete Collection",
+        "description": "Complete API collection for testing Custom Categories functionality",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://your-domain.com/api/v1",
+            "type": "string"
+        },
+        {
+            "key": "token",
+            "value": "your_bearer_token_here",
+            "type": "string"
+        },
+        {
+            "key": "company_id",
+            "value": "1",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Custom Categories",
+            "item": [
+                {
+                    "name": "Get Custom Categories",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/companies/{{company_id}}/custom-categories",
+                            "host": ["{{base_url}}"],
+                            "path": ["companies", "{{company_id}}", "custom-categories"]
+                        }
+                    }
+                },
+                {
+                    "name": "Create Custom Category",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"سيارات فاخرة\",\n    \"description\": \"وصف القسم\",\n    \"image\": \"image_url\",\n    \"is_active\": true,\n    \"sort_order\": 0\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/companies/{{company_id}}/custom-categories",
+                            "host": ["{{base_url}}"],
+                            "path": ["companies", "{{company_id}}", "custom-categories"]
+                        }
+                    }
+                },
+                {
+                    "name": "Update Custom Category",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"الاسم الجديد\",\n    \"description\": \"الوصف الجديد\",\n    \"image\": \"new_image_url\",\n    \"is_active\": false,\n    \"sort_order\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/companies/custom-categories/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["companies", "custom-categories", "1"]
+                        }
+                    }
+                },
+                {
+                    "name": "Delete Custom Category",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/companies/custom-categories/1",
+                            "host": ["{{base_url}}"],
+                            "path": ["companies", "custom-categories", "1"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Bulk Operations",
+            "item": [
+                {
+                    "name": "Bulk Update Order",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"categories\": [\n        {\n            \"id\": 1,\n            \"sort_order\": 0\n        },\n        {\n            \"id\": 2,\n            \"sort_order\": 1\n        }\n    ]\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/companies/{{company_id}}/custom-categories/bulk/order",
+                            "host": ["{{base_url}}"],
+                            "path": ["companies", "{{company_id}}", "custom-categories", "bulk", "order"]
+                        }
+                    }
+                },
+                {
+                    "name": "Bulk Update Status",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"category_ids\": [1, 2, 3],\n    \"is_active\": false\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/companies/{{company_id}}/custom-categories/bulk/status",
+                            "host": ["{{base_url}}"],
+                            "path": ["companies", "{{company_id}}", "custom-categories", "bulk", "status"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Categories Statistics",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/companies/{{company_id}}/custom-categories/statistics",
+                            "host": ["{{base_url}}"],
+                            "path": ["companies", "{{company_id}}", "custom-categories", "statistics"]
+                        }
+                    }
+                },
+                {
+                    "name": "Search Categories",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/companies/{{company_id}}/custom-categories/search?query=سيارات",
+                            "host": ["{{base_url}}"],
+                            "path": ["companies", "{{company_id}}", "custom-categories", "search"],
+                            "query": [
+                                {
+                                    "key": "query",
+                                    "value": "سيارات"
+                                }
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Products",
+            "item": [
+                {
+                    "name": "Get Company Products",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/companies/{{company_id}}/products",
+                            "host": ["{{base_url}}"],
+                            "path": ["companies", "{{company_id}}", "products"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Products Count",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/companies/{{company_id}}/products/count",
+                            "host": ["{{base_url}}"],
+                            "path": ["companies", "{{company_id}}", "products", "count"]
+                        }
+                    }
+                },
+                {
+                    "name": "Search Products",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/companies/{{company_id}}/products/search?query=اسم المنتج",
+                            "host": ["{{base_url}}"],
+                            "path": ["companies", "{{company_id}}", "products", "search"],
+                            "query": [
+                                {
+                                    "key": "query",
+                                    "value": "اسم المنتج"
+                                }
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Products Statistics",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/companies/{{company_id}}/products/statistics",
+                            "host": ["{{base_url}}"],
+                            "path": ["companies", "{{company_id}}", "products", "statistics"]
+                        }
+                    }
+                },
+                {
+                    "name": "Get Products by Category",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/companies/{{company_id}}/categories/1/products",
+                            "host": ["{{base_url}}"],
+                            "path": ["companies", "{{company_id}}", "categories", "1", "products"]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "System Categories",
+            "item": [
+                {
+                    "name": "Get System Categories",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{token}}"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/general/categories",
+                            "host": ["{{base_url}}"],
+                            "path": ["general", "categories"]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

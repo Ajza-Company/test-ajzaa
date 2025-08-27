@@ -56,8 +56,21 @@ Route::prefix('v1')->group(function () {
         Route::delete('custom-categories/{category}', [App\Http\Controllers\api\v1\CustomCategoryController::class, 'destroy']);
         
         // Company Products routes
-        Route::get('{company}/products', [App\Http\Controllers\api\v1\CompanyProductController::class, 'index']);
+        Route::prefix('{company}/products')->group(function () {
+            Route::get('/', [App\Http\Controllers\api\v1\CompanyProductController::class, 'index']);
+            Route::get('count', [App\Http\Controllers\api\v1\CompanyProductController::class, 'getProductsCount']);
+            Route::get('search', [App\Http\Controllers\api\v1\CompanyProductController::class, 'searchProducts']);
+            Route::get('statistics', [App\Http\Controllers\api\v1\CompanyProductController::class, 'getStatistics']);
+        });
         Route::get('{company}/categories/{category}/products', [App\Http\Controllers\api\v1\CompanyProductController::class, 'getByCategory']);
+        
+        // Bulk Operations routes
+        Route::prefix('{company}/custom-categories')->group(function () {
+            Route::post('bulk/order', [App\Http\Controllers\api\v1\CustomCategoryBulkController::class, 'updateOrder']);
+            Route::post('bulk/status', [App\Http\Controllers\api\v1\CustomCategoryBulkController::class, 'updateStatus']);
+            Route::get('statistics', [App\Http\Controllers\api\v1\CustomCategoryBulkController::class, 'statistics']);
+            Route::get('search', [App\Http\Controllers\api\v1\CustomCategoryBulkController::class, 'search']);
+        });
     });
     
     // User Permissions routes

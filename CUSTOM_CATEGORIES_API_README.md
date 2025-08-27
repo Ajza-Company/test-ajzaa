@@ -196,6 +196,179 @@ Returns products for a specific category within a company.
 }
 ```
 
+### 7. Get Products Count by Category
+**GET** `/companies/{company_id}/products/count`
+
+Returns count of products for each category (system + custom) for a company.
+
+**Response:**
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "category_id": 1,
+            "category_name": "اسم القسم",
+            "category_type": "system",
+            "products_count": 15
+        },
+        {
+            "category_id": 5,
+            "category_name": "سيارات فاخرة",
+            "category_type": "custom",
+            "products_count": 8
+        }
+    ]
+}
+```
+
+### 8. Search Products
+**GET** `/companies/{company_id}/products/search?query=اسم المنتج`
+
+Search products by name within company categories.
+
+**Response:**
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "id": 1,
+            "name": "اسم المنتج",
+            "category": {
+                "id": 1,
+                "name": "اسم القسم",
+                "category_type": "custom"
+            }
+        }
+    ]
+}
+```
+
+### 9. Get Products Statistics
+**GET** `/companies/{company_id}/products/statistics`
+
+Returns statistics about products in company categories.
+
+**Response:**
+```json
+{
+    "success": true,
+    "data": {
+        "total_products": 23,
+        "system_category_products": 15,
+        "custom_category_products": 8,
+        "company_id": 1
+    }
+}
+```
+
+## Bulk Operations
+
+### 10. Bulk Update Categories Order
+**POST** `/companies/{company_id}/custom-categories/bulk/order`
+
+Update sort order for multiple custom categories.
+
+**Request Body:**
+```json
+{
+    "categories": [
+        {
+            "id": 1,
+            "sort_order": 0
+        },
+        {
+            "id": 2,
+            "sort_order": 1
+        }
+    ]
+}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "Categories order updated successfully",
+    "data": [
+        {
+            "id": 1,
+            "name": "سيارات فاخرة",
+            "sort_order": 0
+        },
+        {
+            "id": 2,
+            "name": "قطع غيار",
+            "sort_order": 1
+        }
+    ]
+}
+```
+
+### 11. Bulk Update Categories Status
+**POST** `/companies/{company_id}/custom-categories/bulk/status`
+
+Activate/deactivate multiple custom categories.
+
+**Request Body:**
+```json
+{
+    "category_ids": [1, 2, 3],
+    "is_active": false
+}
+```
+
+**Response:**
+```json
+{
+    "success": true,
+    "message": "3 categories updated successfully",
+    "data": {
+        "updated_count": 3,
+        "is_active": false
+    }
+}
+```
+
+### 12. Get Categories Statistics
+**GET** `/companies/{company_id}/custom-categories/statistics`
+
+Returns statistics about custom categories for a company.
+
+**Response:**
+```json
+{
+    "success": true,
+    "data": {
+        "total_categories": 5,
+        "active_categories": 4,
+        "inactive_categories": 1,
+        "categories_with_products": 3,
+        "empty_categories": 2
+    }
+}
+```
+
+### 13. Search Categories
+**GET** `/companies/{company_id}/custom-categories/search?query=سيارات`
+
+Search custom categories by name.
+
+**Response:**
+```json
+{
+    "success": true,
+    "data": [
+        {
+            "id": 1,
+            "name": "سيارات فاخرة",
+            "category_type": "custom"
+        }
+    ]
+}
+```
+
 ## System Categories Endpoint
 
 ### Get System Categories
