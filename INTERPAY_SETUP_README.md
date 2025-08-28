@@ -10,7 +10,7 @@ Add these variables to your `.env` file:
 
 ```env
 # InterPay Payment Gateway
-INTERPAY_PUBLIC_KEY=pk_live_X8JMzT0ZfUOGvA7CI5qSRQLKswZyAEUUzJFywmDAe29KCY7L7Lp350NmsxkcSJaivo
+INTERPAY_PUBLIC_KEY=your_interpay_public_key_here
 INTERPAY_SECRET_KEY=your_interpay_secret_key_here
 INTERPAY_BASE_URL=https://ecomspghostedpage.softpos-ksa.com/
 INTERPAY_API_BASE_URL=https://interpayapimanagement.azure-api.net

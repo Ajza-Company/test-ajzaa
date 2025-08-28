@@ -215,7 +215,7 @@
                     authToken: generatedTokens.auth_token
                 });
                 
-                const interpay = new Interpay("pk_live_X8JMzT0ZfUOGvA7CI5qSRQLKswZyAEUUzJFywmDAe29KCY7L7Lp350NmsxkcSJaivo");
+                const interpay = new Interpay("{{ config('services.payment.interpay.public_key') }}");
                 
                 const model = {
                     amount: "1.01",
