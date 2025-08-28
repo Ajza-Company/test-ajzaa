@@ -43,7 +43,7 @@ class F_SendOtpCodeService
             }
 
             $isSent = true;
-            // $isSent = $this->smsService->generateAndSendOTP($data['full_mobile']);
+            $isSent = $this->smsService->generateAndSendOTP($data['full_mobile']);
 
             if (!$isSent) {
                 return response()->json(
